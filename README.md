@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Axar NFT Marketplace
+
+A decentralized NFT marketplace built with Next.js and Ethereum smart contracts. This platform allows users to create, collect, and trade NFTs on the Sepolia testnet.
+
+## Features
+
+- Create NFTs from text strings
+- Update NFT metadata (owner only)
+- Connect with Web3 wallet
+- Modern and responsive UI
+- Deployed on Sepolia testnet
+
+## Technology Stack
+
+- Frontend: Next.js, TailwindCSS
+- Smart Contracts: Solidity, Hardhat
+- Blockchain: Ethereum (Sepolia testnet)
+- Web3 Integration: ethers.js, Web3Modal
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Copy `env.example` to `.env` and fill in your environment variables:
+   ```bash
+   cp env.example .env
+   ```
+4. Deploy the smart contract:
+   ```bash
+   npx hardhat run scripts/deploy.js --network sepolia
+   ```
+5. Update the contract address in your `.env` file
+6. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Smart Contract Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- The smart contract is located in `contracts/AxarNFT.sol`
+- Test the contract: `npx hardhat test`
+- Deploy to Sepolia: `npx hardhat run scripts/deploy.js --network sepolia`
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env` file with the following variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+SEPOLIA_RPC_URL=your_sepolia_rpc_url_here
+PRIVATE_KEY=your_wallet_private_key_here
+NEXT_PUBLIC_CONTRACT_ADDRESS=your_deployed_contract_address_here
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

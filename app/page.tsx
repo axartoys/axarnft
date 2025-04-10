@@ -1,103 +1,101 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [connected, setConnected] = useState(false);
+  const [account, setAccount] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+  const connectWallet = async () => {
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const accounts = await provider.listAccounts();
+      setAccount(accounts[0]);
+      setConnected(true);
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-black text-white">
+      <nav className="flex justify-between items-center p-6">
+        <div className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 text-transparent bg-clip-text">
+          axartoys.ai
+        </div>
+        <button
+          onClick={connectWallet}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+        >
+          {connected ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+        </button>
+      </nav>
+
+      <main className="container mx-auto px-6 py-12">
+        <div className="text-center mb-16">
+          <h1 className="text-6xl font-bold mb-4">
+            Discover collect,
+            <br />
+            & sell
+            <span className="text-cyan-400"> Extraordinary</span>
+            <br />
+            NFTs
+          </h1>
+          <p className="text-gray-300 text-xl mb-8">
+            the leading NFT Marketplace on Ethereum
+            <br />
+            Home to the next generation of digital creators. Discover the best NFT collections.
+          </p>
+          <div className="flex justify-center gap-4">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full">
+              Explore
+            </button>
+            <button className="border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 px-8 rounded-full transition-colors">
+              Create
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Sample NFT Cards */}
+          <div className="bg-gray-800 rounded-xl overflow-hidden">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/placeholder.png"
+              alt="NFT"
+              width={300}
+              height={300}
+              className="w-full object-cover"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="p-4">
+              <h3 className="text-xl font-bold mb-2">NFT Title</h3>
+              <p className="text-gray-400">0.05 ETH</p>
+            </div>
+          </div>
+          {/* Add more NFT cards here */}
+        </div>
+
+        <div className="mt-16 text-center">
+          <div className="flex justify-center gap-8 text-2xl font-bold">
+            <div>
+              <span className="text-4xl">200K+</span>
+              <p className="text-gray-400 text-sm">Collections</p>
+            </div>
+            <div>
+              <span className="text-4xl">10K+</span>
+              <p className="text-gray-400 text-sm">Artists</p>
+            </div>
+            <div>
+              <span className="text-4xl">423K+</span>
+              <p className="text-gray-400 text-sm">Community</p>
+            </div>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
