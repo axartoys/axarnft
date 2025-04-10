@@ -17,9 +17,11 @@
     "dotenv": "^16.4.7",
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.2",
+    "framer-motion": "^12.6.3",
     "hardhat": "^2.22.19",
     "ipfs-http-client": "^60.0.1",
     "next": "15.3.0",
+    "next-images": "^1.8.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "web3modal": "^1.9.12"
