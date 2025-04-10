@@ -62,8 +62,20 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="container mx-auto px-6 pb-20">
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-10 py-10">
+      <main className="container mx-auto px-6 pb-20 relative">
+        {/* Circle gradient in the top section */}
+        <div className="absolute top-80 left-3/5 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-xl z-0" style={{
+          background: 'radial-gradient(circle, #FF5A7E 0%, #A056F7 50%, rgba(0,0,0,0) 70%)',
+          opacity: 0.1
+        }}></div>
+        
+        {/* Circle gradient in the middle for Trending NFTs */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-xl z-0" style={{
+          background: 'radial-gradient(circle, #FF5A7E 0%, #A056F7 50%, rgba(0,0,0,0) 70%)',
+          opacity: 0.15          
+        }}></div>
+        
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-10 py-10 relative z-10">
           {/* Left side - Hero content */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
@@ -77,7 +89,7 @@ export default function Home() {
               & sell
               <br />
               <span style={{ 
-                background: 'linear-gradient(90deg, #F96063 0%, #BD316B 100%)',
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>Extraordinary</span>
@@ -98,7 +110,7 @@ export default function Home() {
                   whileTap={{ scale: 0.95 }}
                   className="text-white font-bold py-3 px-8 rounded-full shadow-lg"
                   style={{
-                    background: 'linear-gradient(90deg, #FF5A5F 0%, #FF5A5F 70%, #FF5A5F 100%)',
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -109,9 +121,19 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 px-8 rounded-full transition-colors"
+                  className="relative font-bold py-3 px-8 rounded-full shadow-lg transition-all overflow-hidden"
                 >
-                  Create
+                  <span className="relative z-10" style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  } as React.CSSProperties}>Create</span>
+                  <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+                    background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+                    WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'destination-out',
+                    maskComposite: 'exclude',
+                  } as React.CSSProperties}></span>
                 </motion.button>
               </Link>
             </div>
@@ -142,11 +164,6 @@ export default function Home() {
           >
             {/* NFT layout exactly matching the reference image with increased gaps */}
             <div className="relative w-full h-full flex items-center justify-center">
-              {/* Radial gradient background with specific colors */}
-              <div className="absolute inset-0 rounded-full blur-md z-0" style={{
-                background: 'radial-gradient(circle, #F96063 0%, #BD316B 50%, rgba(0,0,0,0) 70%)',
-                opacity: 0.4
-              }}></div>
               
               <div className="relative w-[500px] h-[500px]">
                 {/* Top NFT - White Monkey */}
@@ -220,7 +237,7 @@ export default function Home() {
           className="mt-20"
         >
           <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
-            background: 'linear-gradient(90deg, #FF5A5F 0%, #FF5A5F 85%, #6666FF 85%, #6666FF 100%)',
+            background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
@@ -259,8 +276,27 @@ export default function Home() {
           </div>
           
           <div className="flex justify-center mt-8">
-            <button className="border-2 border-[#FF5A5F] text-white px-8 py-2 rounded-full hover:bg-[#FF5A5F] transition-colors font-medium">
-              SEE MORE
+            <button 
+              className="relative px-8 py-2 rounded-full transition-all font-medium"
+            >
+              <span className="relative z-10" style={{
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              } as React.CSSProperties}>SEE MORE</span>
+              <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+                background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+                WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                WebkitMaskComposite: 'destination-out',
+                maskComposite: 'exclude',
+              } as React.CSSProperties}></span>
+              <span 
+                className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                }}
+              ></span>
+              
             </button>
           </div>
         </motion.div>
@@ -273,7 +309,11 @@ export default function Home() {
           className="mt-20 bg-gray-900 rounded-2xl p-10"
         >
           <h2 className="text-3xl font-bold mb-12 text-center">
-            <span style={{ color: '#FF5A5F' }}>Create</span> and <span style={{ color: '#6666FF' }}>sell</span> your NFTs
+            <span style={{ 
+              background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>Create and sell your NFTs</span>
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
