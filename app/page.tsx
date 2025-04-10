@@ -1,29 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from "next/link";
 
 export default function Home() {
-  const [connected, setConnected] = useState(false);
-  const [account, setAccount] = useState("");
-
-  const connectWallet = async () => {
-    try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const accounts = await provider.listAccounts();
-      setAccount(accounts[0]);
-      setConnected(true);
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
-  };
-
   // NFT data
   const trendingNFTs = [
     { id: 1, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-1.jpg" },
@@ -32,19 +13,10 @@ export default function Home() {
     { id: 4, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-4.jpg" },
   ];
 
-  const featuredNFTs = [
-    { id: 1, image: "/nft-5.jpg" },
-    { id: 2, image: "/nft-6.jpg" },
-    { id: 3, image: "/nft-7.jpg" },
-    { id: 4, image: "/nft-8.jpg" },
-  ];
-
   const wallets = [
     { name: "MetaMask", logo: "/metamask.png" },
     { name: "Trust Wallet", logo: "/trust-wallet.png" },
-    { name: "WalletConnect", logo: "/walletconnect.png" },
-    { name: "EXODUS", logo: "/exodus.png" },
-    { name: "SafePal", logo: "/safepal.png" },
+    { name: "Coinbase Wallet", logo: "/coinbase-wallet.png" },
   ];
 
   return (
@@ -86,7 +58,7 @@ export default function Home() {
             <h1 className="text-6xl font-bold mb-4">
               Discover collect,
               <br />
-              & sell
+              &amp; sell
               <br />
               <span style={{ 
                 background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
@@ -327,7 +299,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-2">Set up your wallet</h3>
               <p className="text-gray-400 text-sm">
-                Once you've set up your wallet of choice, connect it to OpenSea by clicking the wallet icon in the top right corner. Learn about the wallets we support.
+                Once you&apos;ve set up your wallet of choice, connect it to OpenSea by clicking the wallet icon in the top right corner. Learn about the wallets we support.
               </p>
             </div>
             
@@ -339,9 +311,9 @@ export default function Home() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-2">Upload & Create Collection</h3>
+              <h3 className="text-xl font-bold mb-2">Upload &amp; Create Collection</h3>
               <p className="text-gray-400 text-sm">
-                Upload your work then Click My Collections and set up your collection. Add a description, profile & banner images, and set a secondary sales fee.
+                Upload your work then Click My Collections and set up your collection. Add a description, profile &amp; banner images, and set a secondary sales fee.
               </p>
             </div>
             
@@ -363,7 +335,7 @@ export default function Home() {
       </main>
 
       <footer className="text-center py-6 text-gray-400 text-sm">
-        <p>Made with ❤️ by Axartoys | Developer's Den</p>
+        <p>Made with &amp;hearts; by Axartoys | Developer&apos;s Den</p>
       </footer>
     </div>
   );
