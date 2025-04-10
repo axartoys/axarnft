@@ -51,11 +51,14 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Logo */}
       <div className="container mx-auto px-6 py-6">
-        <div className="text-6xl font-bold text-transparent" style={{ 
-          color: '#FF5A5F', 
-          textShadow: '0 0 8px rgba(255, 90, 95, 0.5)' 
-        }}>
-          axartoys<span className="text-blue-500">.ai</span>
+        <div className="relative h-16 w-48">
+          <Image 
+            src="/logo.png" 
+            alt="axartoys.ai" 
+            fill 
+            style={{ objectFit: 'contain' }}
+            className="object-left"
+          />
         </div>
       </div>
 
@@ -73,7 +76,11 @@ export default function Home() {
               <br />
               & sell
               <br />
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">Extraordinary</span>
+              <span style={{ 
+                background: 'linear-gradient(90deg, #F96063 0%, #BD316B 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>Extraordinary</span>
               <br />
               NFTs
             </h1>
@@ -89,7 +96,11 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg"
+                  className="text-white font-bold py-3 px-8 rounded-full shadow-lg"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A5F 0%, #FF5A5F 70%, #FF5A5F 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
                 >
                   Explore
                 </motion.button>
@@ -129,18 +140,21 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="lg:w-1/2 relative h-[500px]"
           >
-            {/* NFT layout exactly matching the reference image */}
+            {/* NFT layout exactly matching the reference image with increased gaps */}
             <div className="relative w-full h-full flex items-center justify-center">
-              {/* Radial gradient background */}
-              <div className="absolute inset-0 bg-gradient-radial from-pink-500/20 via-purple-500/10 to-transparent z-0"></div>
+              {/* Radial gradient background with specific colors */}
+              <div className="absolute inset-0 rounded-full blur-md z-0" style={{
+                background: 'radial-gradient(circle, #F96063 0%, #BD316B 50%, rgba(0,0,0,0) 70%)',
+                opacity: 0.4
+              }}></div>
               
-              <div className="relative w-[400px] h-[400px]">
+              <div className="relative w-[500px] h-[500px]">
                 {/* Top NFT - White Monkey */}
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 w-48 h-48 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
+                  className="absolute top-0 left-1/2 transform -translate-x-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
                   <Image src="/nft-1.jpg" alt="White Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
@@ -150,7 +164,7 @@ export default function Home() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="absolute top-1/2 left-0 transform -translate-y-1/2 w-48 h-48 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
+                  className="absolute top-1/2 left-0 transform -translate-y-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
                   <Image src="/nft-2.jpg" alt="Split Face NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
@@ -160,7 +174,7 @@ export default function Home() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="absolute top-1/2 right-0 transform -translate-y-1/2 w-48 h-48 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
+                  className="absolute top-1/2 right-0 transform -translate-y-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
                   <Image src="/nft-3.jpg" alt="Afro Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
@@ -170,7 +184,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-48 h-48 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
+                  className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
                   <Image src="/nft-4.jpg" alt="Green Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
@@ -205,7 +219,11 @@ export default function Home() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-20"
         >
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-transparent bg-clip-text">
+          <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
+            background: 'linear-gradient(90deg, #FF5A5F 0%, #FF5A5F 85%, #6666FF 85%, #6666FF 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
             TRENDING NFTs
           </h2>
           
@@ -241,7 +259,7 @@ export default function Home() {
           </div>
           
           <div className="flex justify-center mt-8">
-            <button className="border-2 border-purple-500 text-white px-8 py-2 rounded-full hover:bg-purple-500 transition-colors font-medium">
+            <button className="border-2 border-[#FF5A5F] text-white px-8 py-2 rounded-full hover:bg-[#FF5A5F] transition-colors font-medium">
               SEE MORE
             </button>
           </div>
@@ -255,7 +273,7 @@ export default function Home() {
           className="mt-20 bg-gray-900 rounded-2xl p-10"
         >
           <h2 className="text-3xl font-bold mb-12 text-center">
-            <span className="text-cyan-400">Create</span> and <span className="text-purple-500">sell</span> your NFTs
+            <span style={{ color: '#FF5A5F' }}>Create</span> and <span style={{ color: '#6666FF' }}>sell</span> your NFTs
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
