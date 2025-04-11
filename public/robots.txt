@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://axartoys.ai/sitemap.xml
+
+# Directives for specific crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+# Prevent crawling of specific paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /node_modules/
+
+# Crawl-delay in seconds
+Crawl-delay: 10

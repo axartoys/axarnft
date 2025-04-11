@@ -7,6 +7,12 @@ import Link from "next/link";
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
+import { metadata } from './metadata'
+
+export const pageMetadata = {
+  metadata: metadata,
+  // Add any page-specific metadata here if needed
+}
 
 export default function Home() {
   // State for wallet connection
