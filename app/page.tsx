@@ -1,36 +1,91 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from "next/link";
+import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
+import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
 
 export default function Home() {
-  // NFT data
-  const trendingNFTs = [
-    { id: 1, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-1.jpg" },
-    { id: 2, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-2.jpg" },
-    { id: 3, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-3.jpg" },
-    { id: 4, name: "Bored Ape Jars Club", creator: "randomguy", image: "/nft-4.jpg" },
-  ];
+  // State for wallet connection
+  const [account, setAccount] = useState('');
+  const [connected, setConnected] = useState(false);
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
 
+  // Connect wallet function
+  const connectWallet = async () => {
+    try {
+      const web3Modal = new Web3Modal({
+        cacheProvider: true,
+        providerOptions: {}
+      });
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const accounts = await provider.listAccounts();
+      
+      if (accounts.length > 0) {
+        setAccount(accounts[0]);
+        setConnected(true);
+      }
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+    }
+  };
+
+  // Wallet options
   const wallets = [
     { name: "MetaMask", logo: "/metamask.png" },
-    { name: "Trust Wallet", logo: "/trust-wallet.png" },
+    { name: "WalletConnect", logo: "/walletconnect.png" },
     { name: "Coinbase Wallet", logo: "/coinbase-wallet.png" },
   ];
 
+
+
+  // Effect to check if wallet is already connected
+  useEffect(() => {
+    const checkConnection = async () => {
+      if (window.ethereum && window.ethereum.selectedAddress) {
+        setAccount(window.ethereum.selectedAddress);
+        setConnected(true);
+      }
+    };
+    
+    checkConnection();
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Logo */}
+      {/* Header with Logo and Connect Wallet Button */}
       <div className="container mx-auto px-6 py-6">
-        <div className="relative h-16 w-48">
-          <Image 
-            src="/logo.png" 
-            alt="axartoys.ai" 
-            fill 
-            style={{ objectFit: 'contain' }}
-            className="object-left"
-          />
+        <div className="flex justify-between items-center">
+          <div className="relative h-16 w-48">
+            <Image 
+              src="/logo.png" 
+              alt="axartoys.ai" 
+              fill 
+              style={{ objectFit: 'contain' }}
+              className="object-left"
+            />
+          </div>
+          
+          <button 
+            onClick={connectWallet}
+            className="relative px-8 py-2 rounded-full transition-all font-medium"
+          >
+            <span className="relative z-10" style={{
+              background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            } as React.CSSProperties}>{connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}</span>
+            <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+              background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A) border-box' : 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+              WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'destination-out',
+              maskComposite: 'exclude',
+            } as React.CSSProperties}></span>
+          </button>
         </div>
       </div>
 
@@ -55,24 +110,22 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="lg:w-1/2"
           >
-            <h1 className="text-6xl font-bold mb-4">
-              Discover collect,
-              <br />
-              &amp; sell
-              <br />
-              <span style={{ 
+            <h1 className="text-5xl font-bold mb-4">
+              Unlock Your <span style={{ 
                 background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
-              }}>Extraordinary</span>
+              }}>AI Persona</span>
               <br />
-              NFTs
+              Create, Own, and Port Your
+              <br />
+              AI Interactions Across Any Platform
             </h1>
             
-            <p className="text-gray-300 text-lg mb-8">
-              the leading NFT Marketplace on Ethereum
+            <p className="text-gray-400 text-lg mb-8">
+              Break free from data silos and take control of your AI interactions with Axar,
               <br />
-              Home to the next generation of digital creators. Discover the best NFT collections.
+              the revolutionary NFT-based AI persona management system.
             </p>
             
             <div className="flex gap-4 mb-12">
@@ -85,8 +138,14 @@ export default function Home() {
                     background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                     transition: 'all 0.3s ease'
                   }}
+                  onClick={() => {
+                    const mintSection = document.getElementById('mint-section');
+                    if (mintSection) {
+                      mintSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
                 >
-                  Explore
+                  Create Your Axar NFT
                 </motion.button>
               </Link>
               <Link href="/create">
@@ -183,7 +242,7 @@ export default function Home() {
         </div>
 
         {/* Wallet Connection Options */}
-        <motion.div 
+        {/* <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -199,13 +258,13 @@ export default function Home() {
               <span className="font-bold">{wallet.name}</span>
             </motion.div>
           ))}
-        </motion.div>
+        </motion.div> */}
 
-        {/* Trending NFTs Section */}
+        {/* What is Axar Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-20"
         >
           <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
@@ -213,38 +272,120 @@ export default function Home() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            TRENDING NFTs
+            Introducing Axar: The Future of AI Interactions
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {trendingNFTs.map((nft) => (
-              <motion.div 
-                key={nft.id}
-                whileHover={{ y: -10 }}
-                className="bg-gray-900 rounded-xl overflow-hidden border-2 border-gray-800 shadow-xl"
-              >
-                <div className="relative h-72">
-                  <Image 
-                    src={nft.image} 
-                    alt={nft.name} 
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full overflow-hidden">
-                      <Image src={nft.image} alt="Creator" width={24} height={24} />
-                    </div>
-                    <h3 className="text-lg font-bold">{nft.name}</h3>
-                    <div className="ml-auto">
-                      <Image src="/ethereum.svg" alt="ETH" width={16} height={16} />
-                    </div>
-                  </div>
-                  <p className="text-gray-400 text-sm">{nft.creator}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <p className="text-gray-300 text-lg mb-6">
+              Axar empowers users to create encrypted text prompts for Large Language Models (LLMs), 
+              allowing seamless portability across different AI systems and form factors. This means you can move 
+              your AI persona and interaction history to any AI model, whether it&apos;s on a computer, phone, or robot, 
+              ensuring your data is never trapped with a single company.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Create Your Axar NFT Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-20"
+          id="mint-section"
+        >
+          <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
+            background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            Create Your Axar NFT in 4 Easy Steps
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
+                <div className="text-6xl">1</div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">Generate Your Encrypted Prompt</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Use our intuitive tool to create an encrypted text prompt for your AI persona. Ensure your prompt captures the essence of your desired AI interactions.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Start Creating
+                </button>
+              </div>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-cyan-900">
+                <div className="text-6xl">2</div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">Customize Your NFT Metadata</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Add additional metadata to your NFT, such as a name or description. This metadata will be stored securely and can be updated as you interact with different AI systems.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Customize
+                </button>
+              </div>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-pink-900 to-rose-900">
+                <div className="text-6xl">3</div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">Mint Your Axar NFT</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Connect your Web3 wallet to our platform. Mint your Axar NFT on the blockchain, securing your AI persona and interaction history.
+                </p>
+                <button 
+                  onClick={() => setWalletModalOpen(true)}
+                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {connected ? 'Mint NFT' : 'Connect Wallet'}
+                </button>
+              </div>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-green-900 to-emerald-900">
+                <div className="text-6xl">4</div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">Port Your AI Persona</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Use your Axar NFT to interact with any AI model across various platforms. Your daily interaction summaries will be encrypted and added to your NFT metadata.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
           </div>
           
           <div className="flex justify-center mt-8">
@@ -268,12 +409,85 @@ export default function Home() {
                   background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 }}
               ></span>
-              
             </button>
           </div>
         </motion.div>
 
-        {/* Create and Sell NFTs Section */}
+        {/* Benefits Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-20"
+        >
+          <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
+            background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            Why Choose Axar?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Data Freedom</h3>
+              <p className="text-gray-400">
+                Move your AI persona across different AI models and platforms without being locked into a single ecosystem.
+              </p>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Security</h3>
+              <p className="text-gray-400">
+                Your interaction history is encrypted and stored securely on the blockchain, ensuring privacy and data integrity.
+              </p>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Portability</h3>
+              <p className="text-gray-400">
+                Enjoy a consistent AI experience across computers, phones, robots, and more with seamless persona portability.
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
+            <button 
+              className="text-white font-bold py-3 px-8 rounded-full shadow-lg relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => !connected && setWalletModalOpen(true)}
+            >
+              Create Your Axar NFT Today
+            </button>
+            <p className="text-gray-400 mt-4">Take the first step towards liberating your AI interactions.</p>
+          </div>
+        </motion.div>
+
+        {/* FAQ Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -285,57 +499,141 @@ export default function Home() {
               background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
-            }}>Create and sell your NFTs</span>
+            }}>Frequently Asked Questions</span>
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="flex justify-center mb-4">
-                <div className="bg-gray-800 p-4 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">Set up your wallet</h3>
-              <p className="text-gray-400 text-sm">
-                Once you&apos;ve set up your wallet of choice, connect it to OpenSea by clicking the wallet icon in the top right corner. Learn about the wallets we support.
+          <div className="space-y-6 max-w-3xl mx-auto">
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-3">What is Axar?</h3>
+              <p className="text-gray-400">
+                Axar is an NFT-based system that allows users to create encrypted text prompts for AI interactions, enabling portability across different AI models and platforms.
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="flex justify-center mb-4">
-                <div className="bg-gray-800 p-4 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">Upload &amp; Create Collection</h3>
-              <p className="text-gray-400 text-sm">
-                Upload your work then Click My Collections and set up your collection. Add a description, profile &amp; banner images, and set a secondary sales fee.
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-3">How do I mint an Axar NFT?</h3>
+              <p className="text-gray-400">
+                Simply generate your encrypted prompt, customize your NFT metadata, connect your wallet, and mint your Axar NFT on our platform.
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="flex justify-center mb-4">
-                <div className="bg-gray-800 p-4 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">List them for sale</h3>
-              <p className="text-gray-400 text-sm">
-                Choose between auctions, fixed-price listings, and declining-price listings. You choose how you want to sell your NFTs, and we help you sell them.
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-3">Where is my interaction history stored?</h3>
+              <p className="text-gray-400">
+                Your interaction history is encrypted and stored as metadata in your Axar NFT on the blockchain.
+              </p>
+            </div>
+            
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-3">Can I use Axar with any AI model?</h3>
+              <p className="text-gray-400">
+                Yes, Axar allows you to use your AI persona with any compatible AI model across various platforms.
               </p>
             </div>
           </div>
         </motion.div>
       </main>
 
-      <footer className="text-center py-6 text-gray-400 text-sm">
-        <p>Made with &amp;hearts; by Axartoys | Developer&apos;s Den</p>
+      {/* Wallet Connection Modal */}
+      {walletModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-xl p-6 w-96 max-w-full">
+            <h3 className="text-xl font-bold mb-4">Connect Your Wallet</h3>
+            <p className="text-gray-400 mb-6">Connect with one of our available wallet providers or create a new one.</p>
+            
+            <div className="space-y-3">
+              {wallets.map((wallet) => (
+                <button 
+                  key={wallet.name}
+                  className="w-full flex items-center justify-between bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors"
+                  onClick={connectWallet}
+                >
+                  <span>{wallet.name}</span>
+                  <Image src={wallet.logo} alt={wallet.name} width={24} height={24} />
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              className="mt-6 w-full text-gray-400 hover:text-white"
+              onClick={() => setWalletModalOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Call to Action */}
+      <div className="py-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 mt-20">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to liberate your AI interactions?</h2>
+          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            Create your Axar NFT today and experience the future of AI portability.
+          </p>
+          <button 
+            className="text-white font-bold py-4 px-10 rounded-full shadow-lg relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => setWalletModalOpen(true)}
+          >
+            {connected ? 'Create Your Axar NFT' : 'Connect Wallet to Get Started'}
+          </button>
+        </div>
+      </div>
+
+      {/* Footer with social links */}
+      <footer className="mt-0 border-t border-gray-800 pt-10 pb-6">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div className="mb-6 md:mb-0">
+              <div className="relative h-12 w-36">
+                <Image 
+                  src="/logo.png" 
+                  alt="axartoys.ai" 
+                  fill 
+                  style={{ objectFit: 'contain' }}
+                  className="object-left"
+                />
+              </div>
+              <p className="text-gray-400 mt-2">Break free from AI data silos</p>
+            </div>
+            
+            <div className="flex space-x-6">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <FaTwitter size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <FaDiscord size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <FaTelegram size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <FaMedium size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <FaGithub size={24} />
+              </a>
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800">
+            <p className="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Axar. All rights reserved.</p>
+            
+            <div className="flex space-x-6">
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a>
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">FAQ</a>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-center">
+            <p className="text-gray-500 text-sm">Contact: info@axar.ai</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
