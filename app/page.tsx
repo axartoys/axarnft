@@ -7,12 +7,6 @@ import Link from "next/link";
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
-import { metadata } from './metadata'
-
-export const pageMetadata = {
-  metadata: metadata,
-  // Add any page-specific metadata here if needed
-}
 
 export default function Home() {
   // State for wallet connection
@@ -121,7 +115,11 @@ export default function Home() {
                 background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
-              }}>Digital Persona</span>
+              }}>Digital </span><span style={{ 
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}> Persona</span>
               <br />
               Across Any AI
             </h1>
@@ -305,97 +303,113 @@ export default function Home() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/1-how.jpeg" 
+                  alt="Encrypt Your AI Prompt" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-4">Encrypt Your AI Prompt</h3>
-              <p className="text-gray-400">
-                Create a secure, encrypted prompt that defines how your AI persona behaves and responds.
-              </p>
-              <button 
-                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                Start Creating
-              </button>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Encrypt Your AI Prompt</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Create a secure, encrypted prompt that defines how your AI persona behaves and responds.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Start Creating
+                </button>
+              </div>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-900 to-cyan-900 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/2-how.jpeg" 
+                  alt="Personalize Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-4">Personalize Your NFT</h3>
-              <p className="text-gray-400">
-                Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.
-              </p>
-              <button 
-                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                Customize
-              </button>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Personalize Your NFT</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Customize
+                </button>
+              </div>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-900 to-rose-900 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                  </svg>
-                </div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/3-how.jpeg" 
+                  alt="Mint Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-4">Mint Your NFT</h3>
-              <p className="text-gray-400">
-                Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.
-              </p>
-              <button 
-                onClick={() => setWalletModalOpen(true)}
-                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {connected ? 'Mint NFT' : 'Connect Wallet'}
-              </button>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Mint Your NFT</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.
+                </p>
+                <button 
+                  onClick={() => setWalletModalOpen(true)}
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {connected ? 'Mint NFT' : 'Connect Wallet'}
+                </button>
+              </div>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-900 to-emerald-900 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                  </svg>
-                </div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/4-how.jpeg" 
+                  alt="Use Anywhere" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
               </div>
-              <h3 className="text-xl font-bold mb-4">Use Anywhere</h3>
-              <p className="text-gray-400">
-                Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.
-              </p>
-              <button 
-                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                Learn More
-              </button>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Use Anywhere</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Learn More
+                </button>
+              </div>
             </div>
           </div>
           
