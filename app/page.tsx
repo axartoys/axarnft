@@ -111,21 +111,19 @@ export default function Home() {
             className="lg:w-1/2"
           >
             <h1 className="text-5xl font-bold mb-4">
-              Unlock Your <span style={{ 
+              Decentralize Your <span style={{ 
                 background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
-              }}>AI Persona</span>
+              }}>Digital Persona</span>
               <br />
-              Create, Own, and Port Your
-              <br />
-              AI Interactions Across Any Platform
+              Across Any AI
             </h1>
             
             <p className="text-gray-400 text-lg mb-8">
-              Break free from data silos and take control of your AI interactions with Axar,
+              Axar empowers you to own and move your AI interactions freely,
               <br />
-              the revolutionary NFT-based AI persona management system.
+              no matter the form factor or AI model.
             </p>
             
             <div className="flex gap-4 mb-12">
@@ -204,7 +202,7 @@ export default function Home() {
                   transition={{ delay: 0.3 }}
                   className="absolute top-0 left-1/2 transform -translate-x-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
-                  <Image src="/nft-1.jpg" alt="White Monkey NFT" fill style={{ objectFit: 'cover' }} />
+                  <Image src="/nft-1.jpeg" alt="White Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
                 
                 {/* Left NFT - Yellow/Green Split Face */}
@@ -214,7 +212,7 @@ export default function Home() {
                   transition={{ delay: 0.4 }}
                   className="absolute top-1/2 left-0 transform -translate-y-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
-                  <Image src="/nft-2.jpg" alt="Split Face NFT" fill style={{ objectFit: 'cover' }} />
+                  <Image src="/nft-2.jpeg" alt="Split Face NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
                 
                 {/* Right NFT - Afro Monkey */}
@@ -224,7 +222,7 @@ export default function Home() {
                   transition={{ delay: 0.5 }}
                   className="absolute top-1/2 right-0 transform -translate-y-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
-                  <Image src="/nft-3.jpg" alt="Afro Monkey NFT" fill style={{ objectFit: 'cover' }} />
+                  <Image src="/nft-3.jpeg" alt="Afro Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
                 
                 {/* Bottom NFT - Green Monkey with Cap */}
@@ -234,7 +232,7 @@ export default function Home() {
                   transition={{ delay: 0.6 }}
                   className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >
-                  <Image src="/nft-4.jpg" alt="Green Monkey NFT" fill style={{ objectFit: 'cover' }} />
+                  <Image src="/nft-4.jpeg" alt="Green Monkey NFT" fill style={{ objectFit: 'cover' }} />
                 </motion.div>
               </div>
             </div>
@@ -277,10 +275,9 @@ export default function Home() {
           
           <div className="max-w-3xl mx-auto text-center mb-12">
             <p className="text-gray-300 text-lg mb-6">
-              Axar empowers users to create encrypted text prompts for Large Language Models (LLMs), 
-              allowing seamless portability across different AI systems and form factors. This means you can move 
-              your AI persona and interaction history to any AI model, whether it&apos;s on a computer, phone, or robot, 
-              ensuring your data is never trapped with a single company.
+              Axar lets you create encrypted AI prompts that work anywhere. Take your AI persona 
+              with you across any device or model—computer, phone, or robot. Your data stays yours, 
+              never locked to a single company.
             </p>
           </div>
         </motion.div>
@@ -298,93 +295,101 @@ export default function Home() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            Create Your Axar NFT in 4 Easy Steps
+            Four Simple Steps to AI Freedom
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
-              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
-                <div className="text-6xl">1</div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Generate Your Encrypted Prompt</h3>
-                <p className="text-gray-400 text-sm mb-4">
-                  Use our intuitive tool to create an encrypted text prompt for your AI persona. Ensure your prompt captures the essence of your desired AI interactions.
-                </p>
-                <button 
-                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Start Creating
-                </button>
-              </div>
+              <h3 className="text-xl font-bold mb-4">Encrypt Your AI Prompt</h3>
+              <p className="text-gray-400">
+                Create a secure, encrypted prompt that defines how your AI persona behaves and responds.
+              </p>
+              <button 
+                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Start Creating
+              </button>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
-              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-cyan-900">
-                <div className="text-6xl">2</div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-900 to-cyan-900 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Customize Your NFT Metadata</h3>
-                <p className="text-gray-400 text-sm mb-4">
-                  Add additional metadata to your NFT, such as a name or description. This metadata will be stored securely and can be updated as you interact with different AI systems.
-                </p>
-                <button 
-                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Customize
-                </button>
-              </div>
+              <h3 className="text-xl font-bold mb-4">Personalize Your NFT</h3>
+              <p className="text-gray-400">
+                Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.
+              </p>
+              <button 
+                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Customize
+              </button>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
-              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-pink-900 to-rose-900">
-                <div className="text-6xl">3</div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-900 to-rose-900 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Mint Your Axar NFT</h3>
-                <p className="text-gray-400 text-sm mb-4">
-                  Connect your Web3 wallet to our platform. Mint your Axar NFT on the blockchain, securing your AI persona and interaction history.
-                </p>
-                <button 
-                  onClick={() => setWalletModalOpen(true)}
-                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  {connected ? 'Mint NFT' : 'Connect Wallet'}
-                </button>
-              </div>
+              <h3 className="text-xl font-bold mb-4">Mint Your NFT</h3>
+              <p className="text-gray-400">
+                Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.
+              </p>
+              <button 
+                onClick={() => setWalletModalOpen(true)}
+                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {connected ? 'Mint NFT' : 'Connect Wallet'}
+              </button>
             </div>
             
-            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all">
-              <div className="relative h-64 w-full flex items-center justify-center bg-gradient-to-br from-green-900 to-emerald-900">
-                <div className="text-6xl">4</div>
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-900 to-emerald-900 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Port Your AI Persona</h3>
-                <p className="text-gray-400 text-sm mb-4">
-                  Use your Axar NFT to interact with any AI model across various platforms. Your daily interaction summaries will be encrypted and added to your NFT metadata.
-                </p>
-                <button 
-                  className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Learn More
-                </button>
-              </div>
+              <h3 className="text-xl font-bold mb-4">Use Anywhere</h3>
+              <p className="text-gray-400">
+                Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.
+              </p>
+              <button 
+                className="w-full text-white font-bold py-2 px-4 rounded-full shadow-lg relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Learn More
+              </button>
             </div>
           </div>
           
@@ -425,7 +430,7 @@ export default function Home() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            Why Choose Axar?
+            Why Axar?
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -439,7 +444,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-4">Data Freedom</h3>
               <p className="text-gray-400">
-                Move your AI persona across different AI models and platforms without being locked into a single ecosystem.
+                Never be locked into one AI ecosystem again. Your data moves with you.
               </p>
             </div>
             
@@ -453,7 +458,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-4">Security</h3>
               <p className="text-gray-400">
-                Your interaction history is encrypted and stored securely on the blockchain, ensuring privacy and data integrity.
+                Blockchain-secured and encrypted. Your AI interactions remain private and tamper-proof.
               </p>
             </div>
             
@@ -467,7 +472,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-4">Portability</h3>
               <p className="text-gray-400">
-                Enjoy a consistent AI experience across computers, phones, robots, and more with seamless persona portability.
+                One AI persona, endless devices. Consistent experience everywhere you go.
               </p>
             </div>
           </div>
@@ -506,28 +511,28 @@ export default function Home() {
             <div className="bg-gray-800 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">What is Axar?</h3>
               <p className="text-gray-400">
-                Axar is an NFT-based system that allows users to create encrypted text prompts for AI interactions, enabling portability across different AI models and platforms.
+                Axar is a blockchain system that makes your AI persona portable. Create once, use everywhere.
               </p>
             </div>
             
             <div className="bg-gray-800 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">How do I mint an Axar NFT?</h3>
               <p className="text-gray-400">
-                Simply generate your encrypted prompt, customize your NFT metadata, connect your wallet, and mint your Axar NFT on our platform.
+                Create your prompt, personalize it, connect your wallet, and mint. Four steps to complete freedom.
               </p>
             </div>
             
             <div className="bg-gray-800 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">Where is my interaction history stored?</h3>
               <p className="text-gray-400">
-                Your interaction history is encrypted and stored as metadata in your Axar NFT on the blockchain.
+                Securely in your NFT on the blockchain, encrypted and accessible only to you.
               </p>
             </div>
             
             <div className="bg-gray-800 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">Can I use Axar with any AI model?</h3>
               <p className="text-gray-400">
-                Yes, Axar allows you to use your AI persona with any compatible AI model across various platforms.
+                Yes. Your Axar persona works with any AI model that supports our open protocol.
               </p>
             </div>
           </div>
@@ -567,9 +572,9 @@ export default function Home() {
       {/* Call to Action */}
       <div className="py-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 mt-20">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to liberate your AI interactions?</h2>
+          <h2 className="text-4xl font-bold mb-6">Ready for AI freedom?</h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Create your Axar NFT today and experience the future of AI portability.
+            Start your journey to truly portable AI today.
           </p>
           <button 
             className="text-white font-bold py-4 px-10 rounded-full shadow-lg relative overflow-hidden"
@@ -579,7 +584,7 @@ export default function Home() {
             }}
             onClick={() => setWalletModalOpen(true)}
           >
-            {connected ? 'Create Your Axar NFT' : 'Connect Wallet to Get Started'}
+            {connected ? 'Create Your AI Persona' : 'Get Started'}
           </button>
         </div>
       </div>
@@ -598,7 +603,7 @@ export default function Home() {
                   className="object-left"
                 />
               </div>
-              <p className="text-gray-400 mt-2">Break free from AI data silos</p>
+              <p className="text-gray-400 mt-2">Your AI, Your Way, Anywhere</p>
             </div>
             
             <div className="flex space-x-6">
@@ -621,7 +626,7 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Axar. All rights reserved.</p>
+            <p className="text-gray-400 text-sm mb-4 md:mb-0"> 2025 Axar. All rights reserved.</p>
             
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
