@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL('http://localhost:3000'),
   title: siteMetadata.title,
   description: siteMetadata.description,
   keywords: siteMetadata.keywords,
@@ -26,6 +27,9 @@ export const metadata = {
   twitter: siteMetadata.twitter,
   verification: siteMetadata.verification,
   icons: siteMetadata.icons,
+};
+
+export const viewport = {
   themeColor: siteMetadata.themeColor,
 };
 
