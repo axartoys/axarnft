@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { GradientButton } from './GradientButton';
 import { GradientText } from './ui';
 
-export function MintWizard({ isOpen, onClose }) {
+export function MintWizard({ isOpen, onClose, isWalletConnected = false, connectWallet }) {
   const [step, setStep] = useState(1);
   const totalSteps = 4;
   const [selectedPrompt, setSelectedPrompt] = useState(null);
@@ -237,20 +237,43 @@ export function MintWizard({ isOpen, onClose }) {
           <p className="text-gray-300 mb-4">
             Connect your wallet to mint your Axar NFT on the blockchain.
           </p>
-          <div className="space-y-3">
-            <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer">
-              <span>MetaMask</span>
-              <img src="/metamask.png" alt="MetaMask" width={24} height={24} />
+          
+          {isWalletConnected ? (
+            <div className="bg-green-900/30 text-green-200 p-4 rounded-lg mb-4">
+              <p className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Wallet connected successfully! Click Continue to proceed to minting.
+              </p>
             </div>
-            <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer">
-              <span>WalletConnect</span>
-              <img src="/walletconnect.png" alt="WalletConnect" width={24} height={24} />
-            </div>
-            <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer">
-              <span>Coinbase Wallet</span>
-              <img src="/coinbase-wallet.png" alt="Coinbase Wallet" width={24} height={24} />
-            </div>
-          </div>
+          ) : (
+            <>
+              <div className="bg-yellow-900/30 text-yellow-200 p-4 rounded-lg mb-4">
+                <p>You need to connect your wallet before you can mint your NFT.</p>
+              </div>
+              <div className="space-y-3">
+                <button
+                  onClick={connectWallet}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 p-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer text-white font-medium"
+                >
+                  Connect Wallet
+                </button>
+                <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer" onClick={connectWallet}>
+                  <span>MetaMask</span>
+                  <img src="/metamask.png" alt="MetaMask" width={24} height={24} />
+                </div>
+                <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer" onClick={connectWallet}>
+                  <span>WalletConnect</span>
+                  <img src="/walletconnect.png" alt="WalletConnect" width={24} height={24} />
+                </div>
+                <div className="bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer" onClick={connectWallet}>
+                  <span>Coinbase Wallet</span>
+                  <img src="/coinbase-wallet.png" alt="Coinbase Wallet" width={24} height={24} />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )
     },
@@ -267,7 +290,7 @@ export function MintWizard({ isOpen, onClose }) {
               <li><span className="font-semibold">Persona Traits:</span> {customPrompt ? (customPrompt.length > 100 ? customPrompt.substring(0, 100) + '...' : customPrompt) : "No persona selected"}</li>
               <li><span className="font-semibold">Name:</span> {generatedName || "Not generated"}</li>
               <li><span className="font-semibold">Description:</span> {generatedDescription ? (generatedDescription.length > 100 ? generatedDescription.substring(0, 100) + '...' : generatedDescription) : "Not generated"}</li>
-              <li><span className="font-semibold">Wallet:</span> Connected</li>
+              <li><span className="font-semibold">Wallet:</span> {isWalletConnected ? "Connected" : "Not Connected"}</li>
               <li><span className="font-semibold">Gas Fee:</span> ~0.002 ETH</li>
             </ul>
           </div>
@@ -280,7 +303,15 @@ export function MintWizard({ isOpen, onClose }) {
 
   // Navigation functions
   const nextStep = () => {
-    if (step < totalSteps) {
+    // If moving to the wallet connection step and wallet is already connected, skip to the next step
+    if (step === 2 && isWalletConnected) {
+      setStep(4); // Skip to the final step
+    }
+    // If moving to the wallet connection step and wallet is not connected, stay on that step
+    else if (step === 2 && !isWalletConnected) {
+      setStep(3); // Go to wallet connection step
+    }
+    else if (step < totalSteps) {
       setStep(step + 1);
     } else {
       // Complete the wizard
@@ -369,7 +400,11 @@ export function MintWizard({ isOpen, onClose }) {
               Back
             </GradientButton>
             
-            <GradientButton onClick={nextStep}>
+            <GradientButton 
+              onClick={nextStep}
+              disabled={step === 3 && !isWalletConnected}
+              className={step === 3 && !isWalletConnected ? 'opacity-50 cursor-not-allowed' : ''}
+            >
               {step === totalSteps ? 'Mint NFT' : 'Continue'}
             </GradientButton>
           </div>

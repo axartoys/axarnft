@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from "next/link";
 import { ethers } from 'ethers';
-import Web3Modal from 'web3modal';
+import { MetaMaskSDK } from '@metamask/sdk';
 import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
 import { GradientButton, GradientTextButton } from './components/GradientButton';
 import { GradientText, RadialGradient, Card, IconCard } from './components/ui';
@@ -18,24 +18,31 @@ export default function Home() {
   const [connected, setConnected] = useState(false);
   const [walletModalOpen, setWalletModalOpen] = useState(false);
   const [mintWizardOpen, setMintWizardOpen] = useState(false);
+  const [metamaskSDK, setMetamaskSDK] = useState(null);
 
-  // Connect wallet function
+  // Connect wallet function using MetaMask SDK
   const connectWallet = async () => {
     try {
-      const web3Modal = new Web3Modal({
-        cacheProvider: true,
-        providerOptions: {}
-      });
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const accounts = await provider.listAccounts();
+      if (!metamaskSDK) {
+        console.log("MetaMask SDK not initialized yet");
+        return;
+      }
       
-      if (accounts.length > 0) {
-        setAccount(accounts[0]);
-        setConnected(true);
+      console.log("Connecting with MetaMask SDK...");
+      
+      try {
+        const accounts = await metamaskSDK.connect();
+        console.log("Connected accounts:", accounts);
+        
+        if (accounts && accounts.length > 0) {
+          setAccount(accounts[0]);
+          setConnected(true);
+        }
+      } catch (error) {
+        console.error("Error connecting with MetaMask SDK:", error);
       }
     } catch (error) {
-      console.error("Error connecting wallet:", error);
+      console.error("Error in connectWallet:", error);
     }
   };
 
@@ -46,16 +53,70 @@ export default function Home() {
     { name: "Coinbase Wallet", logo: "/coinbase-wallet.png" },
   ];
 
-  // Effect to check if wallet is already connected
+  // Initialize MetaMask SDK
   useEffect(() => {
-    const checkConnection = async () => {
-      if (window.ethereum && window.ethereum.selectedAddress) {
-        setAccount(window.ethereum.selectedAddress);
-        setConnected(true);
+    const initializeMetaMaskSDK = async () => {
+      try {
+        // Only initialize in browser environment
+        if (typeof window !== 'undefined') {
+          const MMSDK = new MetaMaskSDK({
+            dappMetadata: {
+              name: "Axar NFT",
+              url: window.location.href,
+            },
+            // Use Infura as a fallback provider if needed
+            infuraAPIKey: process.env.NEXT_PUBLIC_INFURA_API_KEY || '',
+            // Recommended settings for better UX
+            checkInstallationImmediately: false,
+            enableDebug: true,
+          });
+          
+          setMetamaskSDK(MMSDK);
+          console.log("MetaMask SDK initialized");
+          
+          // Check if already connected
+          const ethereum = MMSDK.getProvider();
+          if (ethereum && ethereum.selectedAddress) {
+            setAccount(ethereum.selectedAddress);
+            setConnected(true);
+          }
+          
+          // Set up event listeners
+          if (ethereum) {
+            ethereum.on('accountsChanged', (accounts) => {
+              console.log("Accounts changed:", accounts);
+              if (accounts && accounts.length > 0) {
+                setAccount(accounts[0]);
+                setConnected(true);
+              } else {
+                setAccount('');
+                setConnected(false);
+              }
+            });
+            
+            ethereum.on('chainChanged', () => {
+              console.log("Chain changed, reloading...");
+              window.location.reload();
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing MetaMask SDK:", error);
       }
     };
     
-    checkConnection();
+    initializeMetaMaskSDK();
+    
+    // Cleanup event listeners on unmount
+    return () => {
+      if (metamaskSDK) {
+        const ethereum = metamaskSDK.getProvider();
+        if (ethereum) {
+          ethereum.removeAllListeners('accountsChanged');
+          ethereum.removeAllListeners('chainChanged');
+        }
+      }
+    };
   }, []);
 
   return (
@@ -73,12 +134,12 @@ export default function Home() {
             />
           </div>
           
-          <GradientTextButton
+          <GradientButton
             onClick={connectWallet}
             gradient={connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)'}
           >
             {connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}
-          </GradientTextButton>
+          </GradientButton>
         </div>
       </div>
 
@@ -407,7 +468,12 @@ export default function Home() {
       )}
 
       {/* Mint Wizard */}
-      <MintWizard isOpen={mintWizardOpen} onClose={() => setMintWizardOpen(false)} />
+      <MintWizard 
+        isOpen={mintWizardOpen} 
+        onClose={() => setMintWizardOpen(false)}
+        isWalletConnected={connected}
+        connectWallet={connectWallet}
+      />
 
       {/* Call to Action */}
       <div className="py-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 mt-20">

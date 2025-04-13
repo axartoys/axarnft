@@ -32,9 +32,16 @@ export function GradientTextButton({
   onClick,
   className = '',
   gradient = 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+  isConnected = false,
   ...props
 }) {
-  const buttonClass = `relative px-8 py-2 rounded-full transition-all font-medium text-white ${className}`;
+  // Use a different class and style for connected state
+  const buttonClass = `relative px-8 py-2 rounded-full transition-all font-medium ${isConnected ? 'bg-opacity-10 bg-green-500' : ''} ${className}`;
+  
+  // Use a green gradient for connected state
+  const activeGradient = isConnected 
+    ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' 
+    : gradient;
   
   return (
     <button
@@ -42,13 +49,21 @@ export function GradientTextButton({
       className={buttonClass}
       {...props}
     >
-      <span className="relative z-10" style={{
-        background: gradient,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent'
-      }}>{children}</span>
+      {isConnected && (
+        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+      )}
+      <span 
+        className={`relative z-10 ${isConnected ? 'pl-3' : ''}`} 
+        style={{
+          background: activeGradient,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}
+      >
+        {children}
+      </span>
       <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
-        background: `${gradient} border-box`,
+        background: `${activeGradient} border-box`,
         WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
         WebkitMaskComposite: 'destination-out',
         maskComposite: 'exclude',
