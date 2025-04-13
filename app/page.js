@@ -10,12 +10,14 @@ import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icon
 import { GradientButton, GradientTextButton } from './components/GradientButton';
 import { GradientText, RadialGradient, Card, IconCard } from './components/ui';
 import { StepCard } from './components/StepCard';
+import { MintWizard } from './components/MintWizard';
 
 export default function Home() {
   // State for wallet connection
   const [account, setAccount] = useState('');
   const [connected, setConnected] = useState(false);
   const [walletModalOpen, setWalletModalOpen] = useState(false);
+  const [mintWizardOpen, setMintWizardOpen] = useState(false);
 
   // Connect wallet function
   const connectWallet = async () => {
@@ -105,18 +107,11 @@ export default function Home() {
             </p>
             
             <div className="mb-12">
-              <Link href="/explore">
-                <GradientButton
-                  onClick={() => {
-                    const mintSection = document.getElementById('mint-section');
-                    if (mintSection) {
-                      mintSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                >
-                  Mint Your Prompt
-                </GradientButton>
-              </Link>
+              <GradientButton
+                onClick={() => setMintWizardOpen(true)}
+              >
+                Mint Your Prompt
+              </GradientButton>
             </div>
 
             {/* Stats */}
@@ -267,12 +262,7 @@ export default function Home() {
           </div>
           
           <div className="flex justify-center mt-8">
-            <GradientButton onClick={() => {
-              const mintSection = document.getElementById('mint-section');
-              if (mintSection) {
-                mintSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}>
+            <GradientButton onClick={() => setMintWizardOpen(true)}>
               Mint Your Prompt
             </GradientButton>
           </div>
@@ -338,7 +328,7 @@ export default function Home() {
           </div>
           
           <div className="mt-12 text-center">
-            <GradientButton onClick={() => !connected && setWalletModalOpen(true)}>
+            <GradientButton onClick={() => setMintWizardOpen(true)}>
               Mint Your Prompt
             </GradientButton>
             <p className="text-gray-400 mt-4">Take the first step towards liberating your AI interactions.</p>
@@ -394,10 +384,9 @@ export default function Home() {
 
       {/* Wallet Connection Modal */}
       {walletModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-gray-900 rounded-xl p-6 w-96 max-w-full">
-            <h3 className="text-xl font-bold mb-4">Connect Your Wallet</h3>
-            <p className="text-gray-400 mb-6">Connect with one of our available wallet providers or create a new one.</p>
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" onClick={() => setWalletModalOpen(false)}>
+          <div className="bg-gray-900 rounded-xl p-8 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-2xl font-bold mb-6 text-center">Connect Your Wallet</h3>
             
             <div className="space-y-3">
               {wallets.map((wallet) => (
@@ -417,6 +406,9 @@ export default function Home() {
         </div>
       )}
 
+      {/* Mint Wizard */}
+      <MintWizard isOpen={mintWizardOpen} onClose={() => setMintWizardOpen(false)} />
+
       {/* Call to Action */}
       <div className="py-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 mt-20">
         <div className="container mx-auto px-6 text-center">
@@ -424,7 +416,7 @@ export default function Home() {
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
             Start your journey to truly portable AI today.
           </p>
-          <GradientButton onClick={() => setWalletModalOpen(true)}>
+          <GradientButton onClick={() => setMintWizardOpen(true)}>
             {connected ? 'Create Your AI Persona' : 'Get Started'}
           </GradientButton>
         </div>
