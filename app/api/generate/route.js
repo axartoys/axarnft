@@ -20,7 +20,7 @@ export async function POST(request) {
 
     // Generate name and description
     const nameDescResponse = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4-turbo",
       messages: [
         {
           role: "system",
@@ -39,7 +39,7 @@ export async function POST(request) {
 
     // Generate image
     const imageResponse = await openai.images.generate({
-      model: "dall-e-3",
+      model: "dall-e-2",
       prompt: `Create a futuristic, abstract portrait representing an AI persona with these traits: ${traits}. The image should be suitable as an NFT avatar, with a modern, digital aesthetic that represents the persona named "${nameDescData.name}". Use vibrant colors and a clean, professional style.`,
       n: 1,
       size: "1024x1024",

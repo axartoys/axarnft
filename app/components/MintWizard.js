@@ -18,6 +18,51 @@ export function MintWizard({ isOpen, onClose }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState('');
   
+  // Generate content from OpenAI
+  const generateContent = async () => {
+    if (!selectedPersona || !customPrompt) {
+      setGenerationError('Please select a persona and provide traits first');
+      return;
+    }
+    
+    setIsGenerating(true);
+    setGenerationError('');
+    
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          persona: selectedPersona,
+          traits: customPrompt
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate content');
+      }
+      
+      const data = await response.json();
+      setGeneratedName(data.name);
+      setGeneratedDescription(data.description);
+      setGeneratedImage(data.imageUrl);
+    } catch (error) {
+      console.error('Error generating content:', error);
+      setGenerationError('Failed to generate content. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
+  // Effect to generate content when moving to step 2
+  useEffect(() => {
+    if (step === 2 && selectedPrompt && !generatedName && !isGenerating) {
+      generateContent();
+    }
+  }, [step, selectedPrompt, generatedName, isGenerating]);
+  
   // Predefined persona options
   const promptOptions = [
     {
@@ -231,50 +276,7 @@ export function MintWizard({ isOpen, onClose }) {
     }
   ];
 
-  // Generate content from OpenAI
-  const generateContent = async () => {
-    if (!selectedPersona || !customPrompt) {
-      setGenerationError('Please select a persona and provide traits first');
-      return;
-    }
-    
-    setIsGenerating(true);
-    setGenerationError('');
-    
-    try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          persona: selectedPersona,
-          traits: customPrompt
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to generate content');
-      }
-      
-      const data = await response.json();
-      setGeneratedName(data.name);
-      setGeneratedDescription(data.description);
-      setGeneratedImage(data.imageUrl);
-    } catch (error) {
-      console.error('Error generating content:', error);
-      setGenerationError('Failed to generate content. Please try again.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  
-  // Effect to generate content when moving to step 2
-  useEffect(() => {
-    if (step === 2 && selectedPrompt && !generatedName && !isGenerating) {
-      generateContent();
-    }
-  }, [step, selectedPrompt, generatedName, isGenerating]);
+
 
   // Navigation functions
   const nextStep = () => {
