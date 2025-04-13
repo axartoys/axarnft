@@ -78,13 +78,13 @@ export default function Home() {
               background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-            } as React.CSSProperties}>{connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}</span>
+            }}>{connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}</span>
             <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
               background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A) border-box' : 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
               WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'destination-out',
               maskComposite: 'exclude',
-            } as React.CSSProperties}></span>
+            }}></span>
           </button>
         </div>
       </div>
@@ -160,13 +160,13 @@ export default function Home() {
                     background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                  } as React.CSSProperties}>Create</span>
+                  }}>Create</span>
                   <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
                     background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
                     WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
                     WebkitMaskComposite: 'destination-out',
                     maskComposite: 'exclude',
-                  } as React.CSSProperties}></span>
+                  }}></span>
                 </motion.button>
               </Link>
             </div>
@@ -421,13 +421,13 @@ export default function Home() {
                 background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-              } as React.CSSProperties}>SEE MORE</span>
+              }}>SEE MORE</span>
               <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
                 background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
                 WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
                 WebkitMaskComposite: 'destination-out',
                 maskComposite: 'exclude',
-              } as React.CSSProperties}></span>
+              }}></span>
               <span 
                 className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-opacity"
                 style={{

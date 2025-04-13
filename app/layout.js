@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { metadata as siteMetadata } from "./metadata";
@@ -15,7 +14,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: siteMetadata.title,
   description: siteMetadata.description,
   keywords: siteMetadata.keywords,
@@ -30,11 +29,7 @@ export const metadata: Metadata = {
   themeColor: siteMetadata.themeColor,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark">
       <head>
