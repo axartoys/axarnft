@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { GradientButton } from './GradientButton';
@@ -9,6 +9,14 @@ export function MintWizard({ isOpen, onClose }) {
   const totalSteps = 4;
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const [customPrompt, setCustomPrompt] = useState('');
+  const [selectedPersona, setSelectedPersona] = useState('');
+  
+  // Generated content states
+  const [generatedName, setGeneratedName] = useState('');
+  const [generatedDescription, setGeneratedDescription] = useState('');
+  const [generatedImage, setGeneratedImage] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState('');
   
   // Predefined persona options
   const promptOptions = [
@@ -74,6 +82,7 @@ export function MintWizard({ isOpen, onClose }) {
                 onClick={() => {
                   setSelectedPrompt(option.id);
                   setCustomPrompt(option.prompt);
+                  setSelectedPersona(option.title);
                 }}
               >
                 <div className="flex items-start">
@@ -104,24 +113,75 @@ export function MintWizard({ isOpen, onClose }) {
       content: (
         <div className="space-y-4">
           <p className="text-gray-300 mb-4">
-            Add a name, description, and visual elements to your AI persona.
+            Your AI persona is being transformed into a unique NFT with a generated name, description, and image.
           </p>
-          <div className="space-y-4">
-            <input 
-              type="text" 
-              className="w-full bg-gray-800 text-white rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="NFT Name"
-            />
-            <textarea 
-              className="w-full h-24 bg-gray-800 text-white rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Description"
-            />
-            <div className="flex justify-center">
-              <div className="w-48 h-48 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer hover:border-purple-500 transition-colors">
-                <span className="text-gray-400">Upload Image</span>
+          
+          {isGenerating ? (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+              <p className="text-gray-300">Generating your unique NFT content...</p>
+            </div>
+          ) : generationError ? (
+            <div className="bg-red-900/30 text-red-200 p-4 rounded-lg mb-4">
+              <p>{generationError}</p>
+              <button 
+                className="mt-2 text-white bg-red-700 hover:bg-red-600 px-4 py-2 rounded-lg text-sm"
+                onClick={generateContent}
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-400">NFT Name</label>
+                <input 
+                  type="text" 
+                  className="w-full bg-gray-800 text-white rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="NFT Name"
+                  value={generatedName}
+                  onChange={(e) => setGeneratedName(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-400">Description</label>
+                <textarea 
+                  className="w-full h-24 bg-gray-800 text-white rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Description"
+                  value={generatedDescription}
+                  onChange={(e) => setGeneratedDescription(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-400">Generated Image</label>
+                <div className="flex justify-center">
+                  {generatedImage ? (
+                    <div className="relative w-64 h-64 rounded-lg overflow-hidden">
+                      <img 
+                        src={generatedImage} 
+                        alt="Generated NFT" 
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-64 h-64 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+                      <span className="text-gray-400">No image generated</span>
+                    </div>
+                  )}
+                </div>
+                <div className="text-center">
+                  <button 
+                    className="text-purple-400 hover:text-purple-300 text-sm"
+                    onClick={generateContent}
+                  >
+                    Regenerate Image
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )
     },
@@ -160,7 +220,8 @@ export function MintWizard({ isOpen, onClose }) {
             <h4 className="font-bold mb-2">Summary</h4>
             <ul className="space-y-2 text-gray-300">
               <li><span className="font-semibold">Persona Traits:</span> {customPrompt ? (customPrompt.length > 100 ? customPrompt.substring(0, 100) + '...' : customPrompt) : "No persona selected"}</li>
-              <li><span className="font-semibold">Name:</span> Your NFT Name</li>
+              <li><span className="font-semibold">Name:</span> {generatedName || "Not generated"}</li>
+              <li><span className="font-semibold">Description:</span> {generatedDescription ? (generatedDescription.length > 100 ? generatedDescription.substring(0, 100) + '...' : generatedDescription) : "Not generated"}</li>
               <li><span className="font-semibold">Wallet:</span> Connected</li>
               <li><span className="font-semibold">Gas Fee:</span> ~0.002 ETH</li>
             </ul>
@@ -169,6 +230,51 @@ export function MintWizard({ isOpen, onClose }) {
       )
     }
   ];
+
+  // Generate content from OpenAI
+  const generateContent = async () => {
+    if (!selectedPersona || !customPrompt) {
+      setGenerationError('Please select a persona and provide traits first');
+      return;
+    }
+    
+    setIsGenerating(true);
+    setGenerationError('');
+    
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          persona: selectedPersona,
+          traits: customPrompt
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate content');
+      }
+      
+      const data = await response.json();
+      setGeneratedName(data.name);
+      setGeneratedDescription(data.description);
+      setGeneratedImage(data.imageUrl);
+    } catch (error) {
+      console.error('Error generating content:', error);
+      setGenerationError('Failed to generate content. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
+  // Effect to generate content when moving to step 2
+  useEffect(() => {
+    if (step === 2 && selectedPrompt && !generatedName && !isGenerating) {
+      generateContent();
+    }
+  }, [step, selectedPrompt, generatedName, isGenerating]);
 
   // Navigation functions
   const nextStep = () => {
