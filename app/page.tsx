@@ -7,9 +7,6 @@ import Link from "next/link";
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
-import { GradientButton, GradientTextButton } from './components/GradientButton';
-import { GradientText, RadialGradient, Card, IconCard } from './components/ui';
-import { StepCard } from './components/StepCard';
 
 export default function Home() {
   // State for wallet connection
@@ -44,6 +41,8 @@ export default function Home() {
     { name: "Coinbase Wallet", logo: "/coinbase-wallet.png" },
   ];
 
+
+
   // Effect to check if wallet is already connected
   useEffect(() => {
     const checkConnection = async () => {
@@ -71,18 +70,37 @@ export default function Home() {
             />
           </div>
           
-          <GradientTextButton
+          <button 
             onClick={connectWallet}
-            gradient={connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)'}
+            className="relative px-8 py-2 rounded-full transition-all font-medium"
           >
-            {connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}
-          </GradientTextButton>
+            <span className="relative z-10" style={{
+              background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            } as React.CSSProperties}>{connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}</span>
+            <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+              background: connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A) border-box' : 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+              WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'destination-out',
+              maskComposite: 'exclude',
+            } as React.CSSProperties}></span>
+          </button>
         </div>
       </div>
 
       <main className="container mx-auto px-6 pb-20 relative">
-        {/* Radial gradient decoration */}
-        <RadialGradient position="top-80 left-3/5" size="w-[600px] h-[600px]" opacity={0.1} />
+        {/* Circle gradient in the top section */}
+        <div className="absolute top-80 left-3/5 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-xl z-0" style={{
+          background: 'radial-gradient(circle, #FF5A7E 0%, #A056F7 50%, rgba(0,0,0,0) 70%)',
+          opacity: 0.1
+        }}></div>
+        
+        {/* Circle gradient in the middle for Trending NFTs */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-xl z-0" style={{
+          background: 'radial-gradient(circle, #FF5A7E 0%, #A056F7 50%, rgba(0,0,0,0) 70%)',
+          opacity: 0.15          
+        }}></div>
         
         <div className="flex flex-col lg:flex-row justify-between items-center gap-10 py-10 relative z-10">
           {/* Left side - Hero content */}
@@ -93,7 +111,15 @@ export default function Home() {
             className="lg:w-1/2"
           >
             <h1 className="text-5xl font-bold mb-4">
-              Decentralize Your <GradientText>Digital </GradientText><GradientText> Persona</GradientText>
+              Decentralize Your <span style={{ 
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>Digital </span><span style={{ 
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}> Persona</span>
               <br />
               Across Any AI
             </h1>
@@ -104,9 +130,16 @@ export default function Home() {
               no matter the form factor or AI model.
             </p>
             
-            <div className="mb-12">
+            <div className="flex gap-4 mb-12">
               <Link href="/explore">
-                <GradientButton
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-white font-bold py-3 px-8 rounded-full shadow-lg"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
                   onClick={() => {
                     const mintSection = document.getElementById('mint-section');
                     if (mintSection) {
@@ -114,8 +147,27 @@ export default function Home() {
                     }
                   }}
                 >
-                  Mint Your Prompt
-                </GradientButton>
+                  Create Your Axar NFT
+                </motion.button>
+              </Link>
+              <Link href="/create">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative font-bold py-3 px-8 rounded-full shadow-lg transition-all overflow-hidden"
+                >
+                  <span className="relative z-10" style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  } as React.CSSProperties}>Create</span>
+                  <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+                    background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+                    WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'destination-out',
+                    maskComposite: 'exclude',
+                  } as React.CSSProperties}></span>
+                </motion.button>
               </Link>
             </div>
 
@@ -191,6 +243,25 @@ export default function Home() {
           </motion.div>
         </div>
 
+        {/* Wallet Connection Options */}
+        {/* <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="flex flex-wrap justify-center gap-10 py-12"
+        >
+          {wallets.map((wallet, index) => (
+            <motion.div 
+              key={index}
+              whileHover={{ scale: 1.1 }}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <Image src={wallet.logo} alt={wallet.name} width={30} height={30} />
+              <span className="font-bold">{wallet.name}</span>
+            </motion.div>
+          ))}
+        </motion.div> */}
+
         {/* What is Axar Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -232,49 +303,138 @@ export default function Home() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <StepCard
-              title="Encrypt Your AI Prompt"
-              description="Create a secure, encrypted prompt that defines how your AI persona behaves and responds."
-              imageSrc="/1-how.jpeg"
-              imageAlt="Encrypt Your AI Prompt"
-              buttonText="Start Creating"
-            />
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/1-how.jpeg" 
+                  alt="Encrypt Your AI Prompt" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Encrypt Your AI Prompt</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Create a secure, encrypted prompt that defines how your AI persona behaves and responds.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Start Creating
+                </button>
+              </div>
+            </div>
             
-            <StepCard
-              title="Personalize Your NFT"
-              description="Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems."
-              imageSrc="/2-how.jpeg"
-              imageAlt="Personalize Your NFT"
-              buttonText="Customize"
-            />
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/2-how.jpeg" 
+                  alt="Personalize Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Personalize Your NFT</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Customize
+                </button>
+              </div>
+            </div>
             
-            <StepCard
-              title="Mint Your NFT"
-              description="Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain."
-              imageSrc="/3-how.jpeg"
-              imageAlt="Mint Your NFT"
-              buttonText={connected ? 'Mint NFT' : 'Connect Wallet'}
-              onClick={() => setWalletModalOpen(true)}
-            />
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/3-how.jpeg" 
+                  alt="Mint Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Mint Your NFT</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.
+                </p>
+                <button 
+                  onClick={() => setWalletModalOpen(true)}
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {connected ? 'Mint NFT' : 'Connect Wallet'}
+                </button>
+              </div>
+            </div>
             
-            <StepCard
-              title="Use Anywhere"
-              description="Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT."
-              imageSrc="/4-how.jpeg"
-              imageAlt="Use Anywhere"
-              buttonText="Learn More"
-            />
+            <div className="bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all flex flex-col h-full">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="/4-how.jpeg" 
+                  alt="Use Anywhere" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-4">Use Anywhere</h3>
+                <p className="text-gray-400 mb-6 flex-grow">
+                  Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.
+                </p>
+                <button 
+                  className="w-full text-white font-bold py-3 px-4 rounded-full shadow-lg relative overflow-hidden mt-auto"
+                  style={{
+                    background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
           </div>
           
           <div className="flex justify-center mt-8">
-            <GradientButton onClick={() => {
-              const mintSection = document.getElementById('mint-section');
-              if (mintSection) {
-                mintSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}>
-              Mint Your Prompt
-            </GradientButton>
+            <button 
+              className="relative px-8 py-2 rounded-full transition-all font-medium"
+            >
+              <span className="relative z-10" style={{
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              } as React.CSSProperties}>SEE MORE</span>
+              <span className="absolute inset-0 rounded-full border-2 border-transparent" style={{
+                background: 'linear-gradient(90deg, #FF5A7E, #A056F7) border-box',
+                WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                WebkitMaskComposite: 'destination-out',
+                maskComposite: 'exclude',
+              } as React.CSSProperties}></span>
+              <span 
+                className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                style={{
+                  background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                }}
+              ></span>
+            </button>
           </div>
         </motion.div>
 
@@ -338,9 +498,16 @@ export default function Home() {
           </div>
           
           <div className="mt-12 text-center">
-            <GradientButton onClick={() => !connected && setWalletModalOpen(true)}>
-              Mint Your Prompt
-            </GradientButton>
+            <button 
+              className="text-white font-bold py-3 px-8 rounded-full shadow-lg relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+                transition: 'all 0.3s ease'
+              }}
+              onClick={() => !connected && setWalletModalOpen(true)}
+            >
+              Create Your Axar NFT Today
+            </button>
             <p className="text-gray-400 mt-4">Take the first step towards liberating your AI interactions.</p>
           </div>
         </motion.div>
@@ -401,18 +568,23 @@ export default function Home() {
             
             <div className="space-y-3">
               {wallets.map((wallet) => (
-                <Card key={wallet.name} className="bg-gray-800 hover:bg-gray-700 transition-colors">
-                  <div className="flex items-center justify-between p-3">
-                    <span>{wallet.name}</span>
-                    <Image src={wallet.logo} alt={wallet.name} width={24} height={24} />
-                  </div>
-                </Card>
+                <button 
+                  key={wallet.name}
+                  className="w-full flex items-center justify-between bg-gray-800 hover:bg-gray-700 p-3 rounded-lg transition-colors"
+                  onClick={connectWallet}
+                >
+                  <span>{wallet.name}</span>
+                  <Image src={wallet.logo} alt={wallet.name} width={24} height={24} />
+                </button>
               ))}
             </div>
             
-            <GradientButton onClick={() => setWalletModalOpen(false)} className="mt-6">
+            <button 
+              className="mt-6 w-full text-gray-400 hover:text-white"
+              onClick={() => setWalletModalOpen(false)}
+            >
               Cancel
-            </GradientButton>
+            </button>
           </div>
         </div>
       )}
@@ -424,9 +596,16 @@ export default function Home() {
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
             Start your journey to truly portable AI today.
           </p>
-          <GradientButton onClick={() => setWalletModalOpen(true)}>
+          <button 
+            className="text-white font-bold py-4 px-10 rounded-full shadow-lg relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => setWalletModalOpen(true)}
+          >
             {connected ? 'Create Your AI Persona' : 'Get Started'}
-          </GradientButton>
+          </button>
         </div>
       </div>
 
