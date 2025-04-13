@@ -222,7 +222,7 @@ export default function Home() {
           className="mt-20"
           id="mint-section"
         >
-          <h2 className="text-3xl font-bold mb-8 text-center" style={{ 
+          <h2 className="text-3xl font-bold mb-12 text-center" style={{ 
             background: 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
@@ -230,35 +230,84 @@ export default function Home() {
             Four Simple Steps to AI Freedom
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card heading="Create Prompt" subheading="Create a secure, encrypted prompt that defines how your AI persona behaves and responds.">
-              <GradientButton>
-                Start Creating
-              </GradientButton>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mx-auto max-w-7xl">
+            <Card className="flex flex-col h-full" heading="Create Prompt" subheading="Create a secure, encrypted prompt that defines how your AI persona behaves and responds.">
+              <div className="relative h-48 w-full -mx-6 -mt-6 mb-4">
+                <Image 
+                  src="/1-how.jpeg" 
+                  alt="Encrypt Your AI Prompt" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="mt-auto">
+                <GradientButton className="w-full">
+                  Start Creating
+                </GradientButton>
+              </div>
             </Card>
             
-            <Card heading="Add Metadata" subheading="Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.">
-              <GradientButton>
-                Customize
-              </GradientButton>
+            <Card className="flex flex-col h-full" heading="Add Metadata" subheading="Add a name, description, and visual elements. Your metadata evolves as you interact with different AI systems.">
+              <div className="relative h-48 w-full -mx-6 -mt-6 mb-4">
+                <Image 
+                  src="/2-how.jpeg" 
+                  alt="Personalize Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="mt-auto">
+                <GradientButton className="w-full">
+                  Customize
+                </GradientButton>
+              </div>
             </Card>
             
-            <Card heading="Mint NFT" subheading="Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.">
-              <GradientButton onClick={() => setWalletModalOpen(true)}>
-                {connected ? 'Mint NFT' : 'Connect Wallet'}
-              </GradientButton>
+            <Card className="flex flex-col h-full" heading="Mint NFT" subheading="Connect your wallet and mint your Axar NFT, securing your AI persona on the blockchain.">
+              <div className="relative h-48 w-full -mx-6 -mt-6 mb-4">
+                <Image 
+                  src="/3-how.jpeg" 
+                  alt="Mint Your NFT" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="mt-auto">
+                <GradientButton className="w-full" onClick={() => setWalletModalOpen(true)}>
+                  {connected ? 'Mint NFT' : 'Connect Wallet'}
+                </GradientButton>
+              </div>
             </Card>
             
-            <Card heading="Use Anywhere" subheading="Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.">
-              <GradientButton>
-                Learn More
-              </GradientButton>
+            <Card className="flex flex-col h-full" heading="Use Anywhere" subheading="Take your AI persona to any platform or device. Your interactions are encrypted and stored in your NFT.">
+              <div className="relative h-48 w-full -mx-6 -mt-6 mb-4">
+                <Image 
+                  src="/4-how.jpeg" 
+                  alt="Use Anywhere" 
+                  fill 
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-t-lg"
+                />
+              </div>
+              <div className="mt-auto">
+                <GradientButton className="w-full">
+                  Learn More
+                </GradientButton>
+              </div>
             </Card>
           </div>
           
           <div className="flex justify-center mt-8">
-            <GradientButton>
-              SEE MORE
+            <GradientButton onClick={() => {
+              const mintSection = document.getElementById('mint-section');
+              if (mintSection) {
+                mintSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}>
+              Mint Your Prompt
             </GradientButton>
           </div>
         </motion.div>
