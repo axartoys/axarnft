@@ -46,6 +46,7 @@ export default function RootLayout({ children }) {
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}>
+        {/* WagmiProvider is imported dynamically to avoid SSR issues */}
         {children}
       </body>
     </html>

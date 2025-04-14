@@ -11,6 +11,7 @@ import { GradientButton, GradientTextButton } from './components/GradientButton'
 import { GradientText, RadialGradient, Card, IconCard } from './components/ui';
 import { StepCard } from './components/StepCard';
 import { MintWizard } from './components/MintWizard';
+import { Providers } from './providers/Providers';
 
 export default function Home() {
   // State for wallet connection
@@ -134,12 +135,30 @@ export default function Home() {
             />
           </div>
           
-          <GradientButton
-            onClick={connectWallet}
-            gradient={connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)'}
-          >
-            {connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}
-          </GradientButton>
+          <div className="flex space-x-4">
+            <Link href="/sign-hello">
+              <GradientButton
+                gradient={'linear-gradient(90deg, #FF9800, #FF5722)'}
+              >
+                Mint Hello
+              </GradientButton>
+            </Link>
+            
+            <Link href="/mint-nft">
+              <GradientButton
+                gradient={'linear-gradient(90deg, #8E2DE2, #4A00E0)'}
+              >
+                Mint NFT
+              </GradientButton>
+            </Link>
+            
+            <GradientButton
+              onClick={connectWallet}
+              gradient={connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)'}
+            >
+              {connected && account ? `Connected: ${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'Connect Wallet'}
+            </GradientButton>
+          </div>
         </div>
       </div>
 
@@ -468,12 +487,14 @@ export default function Home() {
       )}
 
       {/* Mint Wizard */}
-      <MintWizard 
-        isOpen={mintWizardOpen} 
-        onClose={() => setMintWizardOpen(false)}
-        isWalletConnected={connected}
-        connectWallet={connectWallet}
-      />
+      {mintWizardOpen && (
+        <Providers>
+          <MintWizard 
+            isOpen={mintWizardOpen} 
+            onClose={() => setMintWizardOpen(false)}
+          />
+        </Providers>
+      )}
 
       {/* Call to Action */}
       <div className="py-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 mt-20">

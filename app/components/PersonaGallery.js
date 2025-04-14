@@ -95,48 +95,27 @@ export function PersonaGallery({ isWalletConnected, connectWallet }) {
     setDecryptedPrompt('');
     
     try {
-      // Check if we have the encryption key in session storage
-      const encryptionKey = sessionStorage.getItem(`encryptionKey_${nft.id}`);
+      // Retrieve the encrypted data from IPFS
+      const encryptedData = await retrieveFromIPFS(nft.promptIPFSHash);
       
-      if (!encryptionKey) {
-        // If not, we need to ask the user to sign a message to derive it
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        
-        // This should match the message used during encryption
-        const message = `Sign this message to securely decrypt your AI persona prompt. This doesn't cost any gas and keeps your prompt secure.\n\nAddress: ${address}\nTimestamp: ${Date.now()}`;
-        const signature = await signer.signMessage(message);
-        
-        // Derive the encryption key from the signature
-        const derivedKey = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(signature));
-        
-        // Retrieve the encrypted data from IPFS
-        const encryptedData = await retrieveFromIPFS(nft.promptIPFSHash);
-        
-        // Decrypt the prompt
-        const prompt = decryptPrompt(
-          encryptedData.encryptedPrompt,
-          encryptedData.encryptedKey,
-          derivedKey
-        );
-        
-        setDecryptedPrompt(prompt);
-        
-        // Save the key for this session
-        sessionStorage.setItem(`encryptionKey_${nft.id}`, derivedKey);
-      } else {
-        // If we already have the key, use it
-        const encryptedData = await retrieveFromIPFS(nft.promptIPFSHash);
-        
-        const prompt = decryptPrompt(
-          encryptedData.encryptedPrompt,
-          encryptedData.encryptedKey,
-          encryptionKey
-        );
-        
-        setDecryptedPrompt(prompt);
+      // Check if we have the timestamp from the encrypted data
+      if (!encryptedData || !encryptedData.timestamp) {
+        throw new Error('Could not retrieve encryption data from IPFS');
       }
+      
+      // Get the provider
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      
+      // Use our updated decryptPrompt function which handles the signing process
+      const prompt = await decryptPrompt(
+        encryptedData.encryptedPrompt,
+        encryptedData.encryptedKey,
+        encryptedData.timestamp,
+        provider
+      );
+      
+      setDecryptedPrompt(prompt);
+      
     } catch (error) {
       console.error('Error decrypting prompt:', error);
       setDecryptError('Failed to decrypt prompt. Please try again.');
