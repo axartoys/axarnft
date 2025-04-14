@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from "next/link";
-import { ethers } from 'ethers';
 import { MetaMaskSDK } from '@metamask/sdk';
 import { FaTwitter, FaDiscord, FaTelegram, FaMedium, FaGithub } from 'react-icons/fa';
 import { GradientButton, GradientTextButton } from './components/GradientButton';
@@ -220,6 +218,7 @@ export default function Home() {
                 <motion.div 
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
+                
                   transition={{ delay: 0.4 }}
                   className="absolute top-1/2 left-0 transform -translate-y-1/2 w-50 h-50 rounded-xl overflow-hidden border-2 border-white shadow-lg z-10"
                 >

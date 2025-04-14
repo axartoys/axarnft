@@ -1,14 +1,38 @@
 'use client';
 
-import { NFTStorage } from 'nft.storage';
+// Helper function to create IPFS gateway URL
+const getIPFSGatewayURL = (hash) => {
+  return `https://gateway.pinata.cloud/ipfs/${hash}`;
+};
 
-// Initialize the NFT.Storage client with API key
-const getNFTStorageClient = () => {
-  const apiKey = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY;
-  if (!apiKey) {
-    throw new Error('NFT Storage API key is not configured. Please add NEXT_PUBLIC_NFT_STORAGE_API_KEY to your .env.local file.');
+// Get Pinata JWT token
+const getPinataJWT = () => {
+  const jwt = process.env.NEXT_PUBLIC_PINATA_JWT;
+  if (!jwt) {
+    throw new Error('Pinata JWT missing. Please check your .env.local file.');
   }
-  return new NFTStorage({ token: apiKey });
+  return jwt;
+};
+
+// Helper function for Pinata API calls
+const pinataApi = async (endpoint, options = {}) => {
+  const baseUrl = 'https://api.pinata.cloud';
+  const jwt = getPinataJWT();
+
+  const response = await fetch(`${baseUrl}${endpoint}`, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': `Bearer ${jwt}`
+    }
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Failed to call Pinata API');
+  }
+
+  return response.json();
 };
 
 // Create client when needed instead of at module load time
@@ -21,11 +45,24 @@ const getNFTStorageClient = () => {
  */
 export const storeOnIPFS = async (data) => {
   try {
-    // Store the data as a JSON blob
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const client = getNFTStorageClient();
-    const cid = await client.storeBlob(blob);
-    return cid;
+    const result = await pinataApi('/pinning/pinJSONToIPFS', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        pinataContent: data,
+        pinataMetadata: {
+          name: `NFT_Metadata_${Date.now()}`,
+          keyvalues: {
+            type: 'metadata',
+            timestamp: Date.now().toString()
+          }
+        }
+      })
+    });
+
+    return getIPFSGatewayURL(result.IpfsHash);
   } catch (error) {
     console.error('Error storing data on IPFS:', error);
     throw new Error(`Failed to store data on IPFS: ${error.message}`);
@@ -37,11 +74,33 @@ export const storeOnIPFS = async (data) => {
  * @param {Blob|File} imageFile - The image file to store
  * @returns {Promise<string>} - The IPFS CID (Content Identifier)
  */
-export const storeImageOnIPFS = async (imageFile) => {
+export const storeImageOnIPFS = async (imageFile, metadata = {}) => {
   try {
-    const client = getNFTStorageClient();
-    const cid = await client.storeBlob(imageFile);
-    return cid;
+    const formData = new FormData();
+    
+    // Create metadata JSON
+    const pinataMetadata = JSON.stringify({
+      name: `NFT_Image_${Date.now()}`,
+      keyvalues: {
+        type: 'image',
+        ...metadata,
+        timestamp: Date.now().toString()
+      }
+    });
+
+    formData.append('pinataMetadata', pinataMetadata);
+    formData.append('file', imageFile);
+
+    const result = await pinataApi('/pinning/pinFileToIPFS', {
+      method: 'POST',
+      body: formData
+    });
+
+    return {
+      url: getIPFSGatewayURL(result.IpfsHash),
+      ipfsHash: result.IpfsHash,
+      metadata
+    };
   } catch (error) {
     console.error('Error storing image on IPFS:', error);
     throw new Error(`Failed to store image on IPFS: ${error.message}`);

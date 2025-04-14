@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
+import { useWriteContract, usePrepareWriteContract } from 'wagmi';
 import { metaMask, coinbaseWallet } from 'wagmi/connectors';
 import { GradientButton } from './GradientButton';
 import { GradientText } from './ui';
-import { storeOnIPFS } from '../utils/ipfsStorage';
+import { storeOnIPFS, storeImageOnIPFS } from '../utils/ipfsStorage';
+import { ethers } from 'ethers';
 import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from '../utils/contractABI';
 import CryptoJS from 'crypto-js';
 
@@ -468,40 +470,60 @@ export function MintWizard({ isOpen, onClose }) {
     handleEncryptionSignature();
   }, [signature, signatureTimestamp, isMinting, mintingStatus, customPrompt, address]);
   
+  // Prepare contract write for minting
+  const { config: mintConfig } = usePrepareWriteContract({
+    address: NFT_CONTRACT_ADDRESS,
+    abi: NFT_CONTRACT_ABI,
+    functionName: 'createNFT',
+    enabled: false, // We'll prepare this when we have the metadata
+  });
+
+  const { writeContractAsync: writeNFT } = useWriteContract(mintConfig);
+
   // Function to upload metadata and encrypted prompt to IPFS
   const uploadToIPFS = async (encryptedData) => {
     try {
+      // First, upload the image to IPFS
+      console.log('Uploading image to IPFS...');
+      const imageFile = await fetch(generatedImage).then(r => r.blob());
+      const imageIPFSHash = await storeImageOnIPFS(imageFile);
+      console.log('Image uploaded to IPFS:', imageIPFSHash);
+
       // Prepare metadata for IPFS
       const metadata = {
         name: generatedName,
         description: generatedDescription,
-        image: generatedImage,
+        image: `ipfs://${imageIPFSHash}`,
         attributes: [
           {
             trait_type: "Persona Type",
             value: selectedPersona
           }
-        ]
+        ],
+        encryptedPrompt: encryptedData
       };
       
       // Store metadata on IPFS
       console.log('Uploading metadata to IPFS...');
       const metadataIPFSHash = await storeOnIPFS(metadata);
       console.log('Metadata uploaded to IPFS:', metadataIPFSHash);
+
+      // Now mint the NFT using the metadata URI
+      setMintingStatus('minting');
       
-      // Store encrypted prompt data on IPFS
-      console.log('Uploading encrypted prompt data to IPFS...');
-      const promptIPFSHash = await storeOnIPFS(encryptedData);
-      console.log('Encrypted prompt uploaded to IPFS:', promptIPFSHash);
-      
-      // For demonstration purposes, we'll simulate a successful minting
-      // In a real implementation, you would interact with the blockchain here
-      
-      // Simulate minting success
-      setMintingStatus('success');
-      setMintedTokenId('DEMO-123'); // This would be the actual token ID from the blockchain
-      
-      // In a real implementation, you would mint the NFT on the blockchain
+      // Call the contract's createNFT function
+      const success = await writeNFT({
+        args: [customPrompt, `ipfs://${metadataIPFSHash}`]
+      });
+
+      if (success) {
+        setMintingStatus('success');
+        // Note: In a production app, you'd want to listen for the Transfer event
+        // to get the actual token ID. For now, we'll use a placeholder
+        setMintedTokenId('Minting in progress...');
+      } else {
+        throw new Error('Minting failed');
+      }
     } catch (error) {
       console.error('Error uploading to IPFS or minting:', error);
       setMintingError(`Failed to upload or mint: ${error.message}`);
