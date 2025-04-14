@@ -1,8 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const SEPOLIA_RPC_URL = process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL;
+const PRIVATE_KEY = process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
