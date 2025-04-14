@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { ethers } from 'ethers';
 import { GradientButton } from './GradientButton';
 import { GradientText } from './ui';
+import { encryptPrompt, storeOnIPFS } from '../utils/encryption';
+import { NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI } from '../utils/contractABI';
 
 export function MintWizard({ isOpen, onClose, isWalletConnected = false, connectWallet }) {
   const [step, setStep] = useState(1);
@@ -17,6 +20,13 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
   const [generatedImage, setGeneratedImage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState('');
+  
+  // Minting states
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintingStatus, setMintingStatus] = useState(''); // 'encrypting', 'uploading', 'minting', 'success', 'error'
+  const [mintingError, setMintingError] = useState('');
+  const [mintedTokenId, setMintedTokenId] = useState(null);
+  const [encryptionKey, setEncryptionKey] = useState(''); // Store for session only, not persisted
   
   // Generate content from OpenAI
   const generateContent = async () => {
@@ -119,11 +129,17 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
             Select a persona with unique traits that will be minted as your NFT. You can customize the persona's traits below.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[400px] overflow-y-auto py-2 px-3">
             {promptOptions.map((option) => (
               <div 
                 key={option.id}
-                className={`bg-gray-800 rounded-lg p-4 cursor-pointer transition-all hover:shadow-lg hover:shadow-purple-500/20 ${selectedPrompt === option.id ? 'ring-2 ring-purple-500' : ''}`}
+                className={`rounded-lg p-6 cursor-pointer transition-all hover:shadow-lg hover:shadow-purple-500/20`}
+                style={{
+                  background: selectedPrompt === option.id ? 'linear-gradient(135deg, rgba(160, 86, 247, 0.2), rgba(255, 90, 126, 0.2))' : 'rgba(31, 41, 55, 1)',
+                  boxShadow: selectedPrompt === option.id ? '0 0 15px rgba(160, 86, 247, 0.3)' : '',
+                  border: selectedPrompt === option.id ? '3px solid #A056F7' : '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '0.75rem'
+                }}
                 onClick={() => {
                   setSelectedPrompt(option.id);
                   setCustomPrompt(option.prompt);
@@ -143,12 +159,18 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
           
           <div className="mt-6">
             <h4 className="font-bold mb-2">Customize Your Persona's Traits</h4>
-            <textarea 
-              className="w-full h-32 bg-gray-800 text-white rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Describe your persona's traits, behaviors, and expertise..."
-              value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
-            />
+            <div className="rounded-lg">
+              <textarea 
+                className="w-full h-32 text-white rounded-lg p-6 focus:outline-none focus:ring-2 focus:ring-purple-500 border-0"
+                placeholder="Describe your persona's traits, behaviors, and expertise..."
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                style={{
+                  background: 'rgba(31, 41, 55, 1)',
+                  borderRadius: '0.75rem'
+                }}
+              />
+            </div>
           </div>
         </div>
       )
@@ -281,19 +303,67 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
       title: "Mint Your NFT",
       content: (
         <div className="space-y-4">
-          <p className="text-gray-300 mb-4">
-            Review your information and mint your AI persona NFT.
-          </p>
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <h4 className="font-bold mb-2">Summary</h4>
-            <ul className="space-y-2 text-gray-300">
-              <li><span className="font-semibold">Persona Traits:</span> {customPrompt ? (customPrompt.length > 100 ? customPrompt.substring(0, 100) + '...' : customPrompt) : "No persona selected"}</li>
-              <li><span className="font-semibold">Name:</span> {generatedName || "Not generated"}</li>
-              <li><span className="font-semibold">Description:</span> {generatedDescription ? (generatedDescription.length > 100 ? generatedDescription.substring(0, 100) + '...' : generatedDescription) : "Not generated"}</li>
-              <li><span className="font-semibold">Wallet:</span> {isWalletConnected ? "Connected" : "Not Connected"}</li>
-              <li><span className="font-semibold">Gas Fee:</span> ~0.002 ETH</li>
-            </ul>
-          </div>
+          {isMinting ? (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+              <p className="text-gray-300">
+                {mintingStatus === 'encrypting' && 'Encrypting your prompt with your wallet signature...'}
+                {mintingStatus === 'uploading' && 'Uploading encrypted data to IPFS...'}
+                {mintingStatus === 'minting' && 'Minting your NFT on the blockchain...'}
+                {mintingStatus === 'success' && 'Success! Your AI persona NFT has been minted!'}
+              </p>
+              {mintingStatus === 'success' && mintedTokenId && (
+                <div className="mt-4 bg-green-900/30 text-green-200 p-4 rounded-lg">
+                  <p>Your NFT has been minted successfully!</p>
+                  <p className="mt-2">Token ID: {mintedTokenId}</p>
+                  <p className="mt-2 text-sm">Your prompt has been encrypted with your wallet signature and securely stored on IPFS.</p>
+                </div>
+              )}
+            </div>
+          ) : mintingError ? (
+            <div className="bg-red-900/30 text-red-200 p-4 rounded-lg mb-4">
+              <p>{mintingError}</p>
+              <button 
+                className="mt-2 text-white bg-red-700 hover:bg-red-600 px-4 py-2 rounded-lg text-sm"
+                onClick={() => setMintingError('')}
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <>
+              <p className="text-gray-300 mb-4">
+                Review your information and mint your AI persona NFT. Your prompt will be encrypted with your wallet signature.
+              </p>
+              <div className="bg-gray-800 p-4 rounded-lg mb-6">
+                <h4 className="font-bold mb-2">Summary</h4>
+                <ul className="space-y-2 text-gray-300">
+                  <li><span className="font-semibold">Persona Traits:</span> {customPrompt ? (customPrompt.length > 100 ? customPrompt.substring(0, 100) + '...' : customPrompt) : "No persona selected"}</li>
+                  <li><span className="font-semibold">Name:</span> {generatedName || "Not generated"}</li>
+                  <li><span className="font-semibold">Description:</span> {generatedDescription ? (generatedDescription.length > 100 ? generatedDescription.substring(0, 100) + '...' : generatedDescription) : "Not generated"}</li>
+                  <li><span className="font-semibold">Wallet:</span> {isWalletConnected ? "Connected" : "Not Connected"}</li>
+                  <li><span className="font-semibold">Gas Fee:</span> ~0.002 ETH</li>
+                </ul>
+              </div>
+              
+              <div className="bg-yellow-900/30 text-yellow-200 p-4 rounded-lg mb-6">
+                <h4 className="font-bold mb-2">Security Information</h4>
+                <p className="text-sm">Your prompt will be encrypted using your wallet signature, ensuring only you can decrypt and access it in the future. The encrypted data will be stored on IPFS, and only a reference to it will be stored on the blockchain.</p>
+              </div>
+              
+              {generatedImage && (
+                <div className="flex justify-center mb-6">
+                  <div className="relative w-64 h-64 rounded-lg overflow-hidden border-4 border-purple-500/30">
+                    <img 
+                      src={generatedImage} 
+                      alt="Generated NFT" 
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )
     }
@@ -301,8 +371,91 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
 
 
 
+  // Function to mint the NFT with encrypted prompt
+  const mintNFT = async () => {
+    if (!isWalletConnected || !customPrompt || !generatedName || !generatedDescription || !generatedImage) {
+      setMintingError('Please ensure all fields are filled and your wallet is connected.');
+      return;
+    }
+    
+    setIsMinting(true);
+    setMintingStatus('encrypting');
+    setMintingError('');
+    
+    try {
+      // Get the Ethereum provider
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      
+      // 1. Encrypt the prompt with the user's wallet signature
+      setMintingStatus('encrypting');
+      const encryptionResult = await encryptPrompt(customPrompt, provider);
+      setEncryptionKey(encryptionResult.encryptionKey); // Save for future decryption
+      
+      // 2. Prepare metadata for IPFS
+      const metadata = {
+        name: generatedName,
+        description: generatedDescription,
+        image: generatedImage,
+        attributes: [
+          {
+            trait_type: "Persona Type",
+            value: selectedPersona
+          }
+        ]
+      };
+      
+      // 3. Store metadata on IPFS
+      setMintingStatus('uploading');
+      const metadataIPFSHash = await storeOnIPFS(metadata);
+      
+      // 4. Store encrypted prompt data on IPFS
+      const encryptedData = {
+        encryptedPrompt: encryptionResult.encryptedPrompt,
+        encryptedKey: encryptionResult.encryptedKey
+      };
+      const promptIPFSHash = await storeOnIPFS(encryptedData);
+      
+      // 5. Mint the NFT with reference to encrypted prompt
+      setMintingStatus('minting');
+      const signer = provider.getSigner();
+      const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI, signer);
+      
+      const tokenURI = `ipfs://${metadataIPFSHash}`;
+      const tx = await nftContract.mintPersona(
+        await signer.getAddress(),
+        tokenURI,
+        promptIPFSHash
+      );
+      
+      // Wait for transaction to be mined
+      const receipt = await tx.wait();
+      
+      // Get the token ID from the event
+      const event = receipt.events.find(event => event.event === 'PersonaMinted');
+      const tokenId = event.args.tokenId.toString();
+      
+      setMintedTokenId(tokenId);
+      setMintingStatus('success');
+      
+      // Save encryption key in localStorage (only for this session)
+      // In a real app, you'd want a more secure approach
+      sessionStorage.setItem(`encryptionKey_${tokenId}`, encryptionResult.encryptionKey);
+      
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+      setMintingError(`Failed to mint NFT: ${error.message}`);
+      setIsMinting(false);
+    }
+  };
+  
   // Navigation functions
   const nextStep = () => {
+    // If this is the final step and the user clicks mint
+    if (step === totalSteps) {
+      mintNFT();
+      return;
+    }
+    
     // If moving to the wallet connection step and wallet is already connected, skip to the next step
     if (step === 2 && isWalletConnected) {
       setStep(4); // Skip to the final step
@@ -349,9 +502,13 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
         onClick={onClose}
       >
         <motion.div 
-          className="bg-gray-900 rounded-xl p-8 max-w-2xl w-full mx-4 relative"
+          className="bg-gray-900 rounded-xl p-8 max-w-2xl w-full mx-4 relative overflow-hidden"
           variants={modalVariants}
           onClick={(e) => e.stopPropagation()}
+          style={{
+            background: 'radial-gradient(circle at top right, rgba(160, 86, 247, 0.15), rgba(255, 90, 126, 0.05), rgba(13, 18, 30, 1) 70%)',
+            boxShadow: '0 0 30px rgba(160, 86, 247, 0.2)'
+          }}
         >
           {/* Close button */}
           <button 
@@ -402,10 +559,10 @@ export function MintWizard({ isOpen, onClose, isWalletConnected = false, connect
             
             <GradientButton 
               onClick={nextStep}
-              disabled={step === 3 && !isWalletConnected}
-              className={step === 3 && !isWalletConnected ? 'opacity-50 cursor-not-allowed' : ''}
+              disabled={(step === 3 && !isWalletConnected) || (step === totalSteps && isMinting)}
+              className={(step === 3 && !isWalletConnected) || (step === totalSteps && isMinting) ? 'opacity-50 cursor-not-allowed' : ''}
             >
-              {step === totalSteps ? 'Mint NFT' : 'Continue'}
+              {step === totalSteps ? (mintingStatus === 'success' ? 'Done' : 'Mint NFT') : 'Continue'}
             </GradientButton>
           </div>
         </motion.div>
