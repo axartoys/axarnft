@@ -2,10 +2,17 @@
 
 import { NFTStorage } from 'nft.storage';
 
-// Initialize the NFT.Storage client
-const client = new NFTStorage({ 
-  token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY 
-});
+// Initialize the NFT.Storage client with API key
+const getNFTStorageClient = () => {
+  const apiKey = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY;
+  if (!apiKey) {
+    throw new Error('NFT Storage API key is not configured. Please add NEXT_PUBLIC_NFT_STORAGE_API_KEY to your .env.local file.');
+  }
+  return new NFTStorage({ token: apiKey });
+};
+
+// Create client when needed instead of at module load time
+// This ensures environment variables are properly loaded
 
 /**
  * Store JSON data on IPFS using NFT.Storage
@@ -16,6 +23,7 @@ export const storeOnIPFS = async (data) => {
   try {
     // Store the data as a JSON blob
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const client = getNFTStorageClient();
     const cid = await client.storeBlob(blob);
     return cid;
   } catch (error) {
@@ -31,6 +39,7 @@ export const storeOnIPFS = async (data) => {
  */
 export const storeImageOnIPFS = async (imageFile) => {
   try {
+    const client = getNFTStorageClient();
     const cid = await client.storeBlob(imageFile);
     return cid;
   } catch (error) {
@@ -78,7 +87,22 @@ export const storeNFTData = async (metadata, imageFile) => {
  */
 export const retrieveFromIPFS = async (cid) => {
   try {
-    // Construct the IPFS gateway URL
+    // First try to use the NFT.Storage client if available
+    try {
+      const client = getNFTStorageClient();
+      const data = await client.get(cid);
+      if (data) {
+        const files = await data.files();
+        if (files.length > 0) {
+          const text = await files[0].text();
+          return JSON.parse(text);
+        }
+      }
+    } catch (clientError) {
+      console.warn('Failed to retrieve from NFT.Storage client, falling back to IPFS gateway:', clientError);
+    }
+    
+    // Fallback to IPFS gateway
     const url = `https://ipfs.io/ipfs/${cid}`;
     
     // Fetch the data

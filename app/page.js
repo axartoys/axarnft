@@ -135,23 +135,7 @@ export default function Home() {
             />
           </div>
           
-          <div className="flex space-x-4">
-            <Link href="/sign-hello">
-              <GradientButton
-                gradient={'linear-gradient(90deg, #FF9800, #FF5722)'}
-              >
-                Mint Hello
-              </GradientButton>
-            </Link>
-            
-            <Link href="/mint-nft">
-              <GradientButton
-                gradient={'linear-gradient(90deg, #8E2DE2, #4A00E0)'}
-              >
-                Mint NFT
-              </GradientButton>
-            </Link>
-            
+          <div className="flex space-x-4">            
             <GradientButton
               onClick={connectWallet}
               gradient={connected ? 'linear-gradient(90deg, #4CAF50, #8BC34A)' : 'linear-gradient(90deg, #FF5A7E 0%, #A056F7 100%)'}
