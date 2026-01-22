@@ -61,13 +61,13 @@ export default function Home() {
       <div className="container mx-auto px-6 py-6">
         <div className="flex justify-between items-center">
           <div className="relative h-16 w-48">
-            <Image 
+            {/* <Image 
               src="/logo.png" 
               alt="axartoys.ai" 
               fill 
               style={{ objectFit: 'contain' }}
               className="object-left"
-            />
+            /> */}
           </div>
           
           <button 
